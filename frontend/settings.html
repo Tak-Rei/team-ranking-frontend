@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設定 - チームランキング</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="settings-container">
+    <button class="back-btn" onclick="history.back()">← ランキングに戻る</button>
+    <h2>設定</h2>
+
+    <div id="alertBox" style="display:none"></div>
+
+    <div id="loginRequired" style="display:none">
+      <p style="margin-bottom:16px;color:#aaa">設定を変更するにはStravaログインが必要です。</p>
+      <button class="save-btn" id="loginBtn">Stravaでログイン</button>
+    </div>
+
+    <form id="settingsForm" style="display:none">
+      <p class="section-title">プロフィール</p>
+
+      <div class="form-group">
+        <label>ニックネーム <span style="color:#fc4c02">*</span></label>
+        <input type="text" id="nickname" maxlength="30" placeholder="ランキングに表示される名前" required>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">Stravaアカウント名を表示する</span>
+        <label class="toggle">
+          <input type="checkbox" id="displayStravaName">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label>チーム</label>
+        <select id="team">
+          <option value="">選択してください</option>
+          <option value="3SHINE">3SHINE</option>
+          <option value="SKY3.5">SKY3.5</option>
+          <option value="Be4">Be4</option>
+          <option value="元リバティー">元リバティー</option>
+          <option value="リバティースタッフ">リバティースタッフ</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>参加レース</label>
+        <input type="text" id="race" maxlength="100" placeholder="例: 富士登山競走、UTMF">
+      </div>
+
+      <div class="form-group">
+        <label>コメント</label>
+        <textarea id="comment" maxlength="200" placeholder="一言コメント"></textarea>
+      </div>
+
+      <p class="section-title">プライバシー設定</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">OFFにするとランキングで非公開表示になります</p>
+
+      <div class="toggle-row">
+        <span class="toggle-label">月間距離を公開する</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyDistance" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">心拍ゾーンを公開する</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyHeartrate" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">Relative Effortを公開する</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyRe" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">詳細ページを公開する</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyDetail" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <button type="submit" class="save-btn">保存する</button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : 'https://team-ranking-backend.onrender.com';
+
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      document.getElementById('loginRequired').style.display = 'block';
+      document.getElementById('loginBtn').onclick = () => {
+        window.location.href = `${API_BASE}/auth/strava`;
+      };
+    } else {
+      loadSettings();
+    }
+
+    async function loadSettings() {
+      const res = await fetch(`${API_BASE}/api/settings/${userId}`).catch(() => null);
+      if (!res || !res.ok) {
+        document.getElementById('loginRequired').style.display = 'block';
+        return;
+      }
+      const data = await res.json();
+      document.getElementById('settingsForm').style.display = 'block';
+      document.getElementById('nickname').value = data.nickname || '';
+      document.getElementById('displayStravaName').checked = !!data.display_strava_name;
+      document.getElementById('team').value = data.team || '';
+      document.getElementById('race').value = data.race || '';
+      document.getElementById('comment').value = data.comment || '';
+      document.getElementById('privacyDistance').checked = data.privacy_distance !== false;
+      document.getElementById('privacyHeartrate').checked = data.privacy_heartrate !== false;
+      document.getElementById('privacyRe').checked = data.privacy_re !== false;
+      document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
+    }
+
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const body = {
+        nickname: document.getElementById('nickname').value,
+        display_strava_name: document.getElementById('displayStravaName').checked,
+        team: document.getElementById('team').value,
+        race: document.getElementById('race').value,
+        comment: document.getElementById('comment').value,
+        privacy_distance: document.getElementById('privacyDistance').checked,
+        privacy_heartrate: document.getElementById('privacyHeartrate').checked,
+        privacy_re: document.getElementById('privacyRe').checked,
+        privacy_detail: document.getElementById('privacyDetail').checked,
+      };
+
+      const res = await fetch(`${API_BASE}/api/settings/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'block';
+      if (res.ok) {
+        alertBox.className = 'alert alert-success';
+        alertBox.textContent = '✓ 設定を保存しました';
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+      } else {
+        const err = await res.json();
+        alertBox.className = 'alert alert-error';
+        alertBox.textContent = err.error || '保存に失敗しました';
+      }
+    });
+  </script>
+</body>
+</html>
