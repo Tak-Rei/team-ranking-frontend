@@ -127,7 +127,7 @@ thead th {
 thead th.sortable { cursor: pointer; user-select: none; }
 thead th.sortable:hover { color: #fc4c02; }
 thead th.active { color: #fc4c02; }
-thead th.num { text-align: right; }
+thead th.num { text-align: center; }
 
 tbody tr {
   border-bottom: 1px solid #222;
@@ -167,7 +167,7 @@ tbody td {
 .team-liberty { background: #3a2a1a; color: #f5c07d; }
 .team-リバティースタッフ { background: #2a3a1a; color: #d4f57d; }
 
-.num { text-align: right; font-variant-numeric: tabular-nums; }
+.num { text-align: center; font-variant-numeric: tabular-nums; }
 .private { color: #555; font-style: italic; }
 
 .loading { text-align: center; padding: 40px; color: #555; }

@@ -202,11 +202,9 @@ function showDetailChart(stats, type) {
     months.push(d.toISOString().slice(0, 7));
   }
 
-  const maxVal = Math.max(...months.map(m => {
-    const s = stats.find(r => r.year_month === m);
-    if (!s) return 0;
-    return type === 'run' ? s.run_distance_km : type === 'ride' ? s.ride_distance_km : s.swim_distance_m;
-  }), 1);
+  // グラフの上限（固定）。ランニング800km / 自転車2000km / 水泳100000m
+  const limits = { run: 800, ride: 2000, swim: 100000 };
+  const maxVal = limits[type] || 800;
 
   container.innerHTML = months.map(m => {
     const s = stats.find(r => r.year_month === m);
