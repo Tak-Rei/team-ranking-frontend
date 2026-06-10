@@ -119,6 +119,12 @@
 
       <button type="submit" class="save-btn">保存する</button>
     </form>
+
+    <div id="resyncSection" style="display:none;margin-top:28px">
+      <p class="section-title">データ更新</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">Stravaから走行データと心拍ゾーンを再取得します。心拍ゾーンの色分けは直近の月から順番に反映されます（一度に約4ヶ月分）。色がまだ付いていない月がある場合は、時間を置いて数回押してください。</p>
+      <button type="button" class="save-btn" id="resyncBtn" style="background:#444">Stravaデータを再取得</button>
+    </div>
   </div>
 
   <script>
@@ -145,6 +151,7 @@
       }
       const data = await res.json();
       document.getElementById('settingsForm').style.display = 'block';
+      document.getElementById('resyncSection').style.display = 'block';
       document.getElementById('nickname').value = data.nickname || '';
       document.getElementById('displayStravaName').checked = !!data.display_strava_name;
       document.getElementById('team').value = data.team || '';
@@ -196,6 +203,33 @@
         alertBox.textContent = err.error || '保存に失敗しました';
       }
     });
+
+    // Stravaデータ再取得
+    const resyncBtn = document.getElementById('resyncBtn');
+    if (resyncBtn) {
+      resyncBtn.addEventListener('click', async () => {
+        const alertBox = document.getElementById('alertBox');
+        resyncBtn.disabled = true;
+        resyncBtn.textContent = '取得中...（最大1〜2分かかります）';
+        try {
+          const r = await fetch(`${API_BASE}/api/sync/${userId}`, { method: 'POST' });
+          alertBox.style.display = 'block';
+          if (r.ok) {
+            alertBox.className = 'alert alert-success';
+            alertBox.textContent = '✓ データを再取得しました（心拍ゾーンは直近の月から順次反映されます）';
+          } else {
+            alertBox.className = 'alert alert-error';
+            alertBox.textContent = '再取得に失敗しました。少し時間を置いて再度お試しください。';
+          }
+        } catch (e) {
+          alertBox.style.display = 'block';
+          alertBox.className = 'alert alert-error';
+          alertBox.textContent = '通信エラーが発生しました。';
+        }
+        resyncBtn.disabled = false;
+        resyncBtn.textContent = 'Stravaデータを再取得';
+      });
+    }
   </script>
 </body>
 </html>
