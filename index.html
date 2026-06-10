@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>チームランキング</title>
+  <title>メンバー別走行距離</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>🏃 チームランキング</h1>
+    <h1>🏃 メンバー別走行距離</h1>
     <div class="header-controls">
       <div class="month-nav">
         <button id="prevMonth">◀</button>
@@ -38,18 +38,20 @@
         <tr>
           <th>#</th>
           <th class="sortable" data-col="nickname">ニックネーム</th>
-          <th class="sortable" data-col="strava_name">Strava名</th>
+          <th class="sortable" data-col="strava_name">Stravaアカウント名</th>
           <th class="sortable" data-col="team">チーム</th>
-          <th class="sortable active" data-col="run_distance_km">ランニング(km) ▼</th>
-          <th class="sortable" data-col="ride_distance_km">自転車(km)</th>
-          <th class="sortable" data-col="swim_distance_m">水泳(m)</th>
-          <th class="sortable" data-col="relative_effort">RE</th>
-          <th>参加レース</th>
+          <th class="sortable num active" data-col="run_distance_km">ランニング(km) ▼</th>
+          <th class="sortable num" data-col="ride_distance_km">自転車(km)</th>
+          <th class="sortable num" data-col="swim_distance_m">水泳(m)</th>
+          <th class="sortable num" data-col="relative_effort">RE</th>
+          <th>フルマラソンベスト</th>
+          <th>ハーフマラソンベスト</th>
+          <th>参加予定レース</th>
           <th>コメント</th>
         </tr>
       </thead>
       <tbody id="rankingBody">
-        <tr><td colspan="10" class="loading">読み込み中...</td></tr>
+        <tr><td colspan="12" class="loading">読み込み中...</td></tr>
       </tbody>
     </table>
   </div>

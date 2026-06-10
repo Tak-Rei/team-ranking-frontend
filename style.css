@@ -127,6 +127,7 @@ thead th {
 thead th.sortable { cursor: pointer; user-select: none; }
 thead th.sortable:hover { color: #fc4c02; }
 thead th.active { color: #fc4c02; }
+thead th.num { text-align: right; }
 
 tbody tr {
   border-bottom: 1px solid #222;
