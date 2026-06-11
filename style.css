@@ -461,7 +461,13 @@ tbody td {
 .mobile-team { display: none; }
 
 @media (max-width: 600px) {
-  header h1 { font-size: 1rem; }
+  header { gap: 8px; padding: 8px 10px; }
+  header h1 { font-size: 0.95rem; white-space: nowrap; }
+  .header-controls { gap: 8px; }
+  .month-nav button { padding: 4px 8px; }
+  #currentMonth { font-size: 0.85rem; min-width: auto; }
+  .team-filter { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 4px; }
+  .filter-btn { flex-shrink: 0; font-size: 0.72rem; padding: 3px 9px; white-space: nowrap; }
   table { font-size: 11px; }
   thead th, tbody td { padding: 7px 3px; }
   thead th { white-space: normal; }
