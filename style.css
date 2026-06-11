@@ -468,8 +468,8 @@ tbody td {
   .month-nav button { padding: 4px 8px; }
   #currentMonth { font-size: 0.85rem; min-width: auto; }
   #settingsBtn { order: 3; margin-left: auto; }
-  .team-filter { order: 4; width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
-  .filter-btn { flex-shrink: 0; font-size: 0.72rem; padding: 4px 10px; white-space: nowrap; }
+  .team-filter { order: 4; width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; gap: 4px; }
+  .filter-btn { flex-shrink: 0; font-size: 0.62rem; padding: 3px 7px; white-space: nowrap; }
   table { font-size: 11px; }
   thead th, tbody td { padding: 7px 3px; }
   thead th { white-space: normal; }
