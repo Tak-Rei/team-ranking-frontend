@@ -66,6 +66,26 @@
         <textarea id="comment" maxlength="200" placeholder="一言コメント"></textarea>
       </div>
 
+      <p class="section-title">心拍ゾーン設定</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">各ゾーンの下限の心拍数（bpm）を入力すると、その値で色分けします。ガーミン等の時計の設定に合わせると、普段見ている数字と一致します。空欄の場合はStravaの設定を使います。変更したら下の「Stravaデータを再取得」を押すと過去のグラフにも反映されます。</p>
+
+      <div class="form-group">
+        <label>ゾーン2の下限（これ未満がゾーン1）</label>
+        <input type="number" id="hrZ2Min" min="0" max="250" placeholder="例: 117">
+      </div>
+      <div class="form-group">
+        <label>ゾーン3の下限</label>
+        <input type="number" id="hrZ3Min" min="0" max="250" placeholder="例: 146">
+      </div>
+      <div class="form-group">
+        <label>ゾーン4の下限</label>
+        <input type="number" id="hrZ4Min" min="0" max="250" placeholder="例: 160">
+      </div>
+      <div class="form-group">
+        <label>ゾーン5の下限</label>
+        <input type="number" id="hrZ5Min" min="0" max="250" placeholder="例: 175">
+      </div>
+
       <p class="section-title">プライバシー設定</p>
       <p style="font-size:0.8rem;color:#666;margin-bottom:12px">OFFにするとランキングで非公開表示になります</p>
 
@@ -165,6 +185,10 @@
       document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
       document.getElementById('privacyFullMarathon').checked = data.privacy_full_marathon !== false;
       document.getElementById('privacyHalfMarathon').checked = data.privacy_half_marathon !== false;
+      document.getElementById('hrZ2Min').value = data.hr_z2_min ?? '';
+      document.getElementById('hrZ3Min').value = data.hr_z3_min ?? '';
+      document.getElementById('hrZ4Min').value = data.hr_z4_min ?? '';
+      document.getElementById('hrZ5Min').value = data.hr_z5_min ?? '';
     }
 
     document.getElementById('settingsForm').addEventListener('submit', async (e) => {
@@ -183,6 +207,10 @@
         privacy_detail: document.getElementById('privacyDetail').checked,
         privacy_full_marathon: document.getElementById('privacyFullMarathon').checked,
         privacy_half_marathon: document.getElementById('privacyHalfMarathon').checked,
+        hr_z2_min: document.getElementById('hrZ2Min').value ? Number(document.getElementById('hrZ2Min').value) : null,
+        hr_z3_min: document.getElementById('hrZ3Min').value ? Number(document.getElementById('hrZ3Min').value) : null,
+        hr_z4_min: document.getElementById('hrZ4Min').value ? Number(document.getElementById('hrZ4Min').value) : null,
+        hr_z5_min: document.getElementById('hrZ5Min').value ? Number(document.getElementById('hrZ5Min').value) : null,
       };
 
       const res = await fetch(`${API_BASE}/api/settings/${userId}`, {

@@ -279,6 +279,7 @@ tbody td {
 }
 
 .form-group input[type="text"],
+.form-group input[type="number"],
 .form-group select,
 .form-group textarea {
   width: 100%;
@@ -293,6 +294,7 @@ tbody td {
 .form-group textarea { min-height: 70px; resize: vertical; }
 
 .form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
