@@ -223,6 +223,19 @@ tbody td {
 }
 .tab-btn.active { background: #fc4c02; color: #fff; }
 
+.chart-tooltip {
+  display: none;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 4px;
+  line-height: 1.6;
+}
+.chart-tooltip.show { display: block; }
+.chart-tooltip .tz { display: inline-block; margin-right: 10px; font-weight: 600; }
+
 .chart-container {
   display: flex;
   flex-direction: column;

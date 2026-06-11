@@ -212,8 +212,13 @@ async function openDetail(userId) {
   } catch (e) {}
 }
 
+const ZONE_COLORS = ['#2563eb', '#0ea5e9', '#22c55e', '#f97316', '#ef4444'];
+
 function showDetailChart(stats, type) {
   const container = document.getElementById('detailChart');
+  const tooltip = document.getElementById('chartTooltip');
+  if (tooltip) tooltip.classList.remove('show');
+
   const months = [];
   for (let i = 11; i >= 0; i--) {
     const d = new Date();
@@ -225,7 +230,9 @@ function showDetailChart(stats, type) {
   const limits = { run: 800, ride: 2000, swim: 100000 };
   const maxVal = limits[type] || 800;
 
-  container.innerHTML = months.map(m => {
+  const tips = [];
+
+  container.innerHTML = months.map((m, idx) => {
     const s = stats.find(r => r.year_month === m);
     const val = s ? (type === 'run' ? s.run_distance_km : type === 'ride' ? s.ride_distance_km : s.swim_distance_m) : 0;
     const pct = (val / maxVal) * 100;
@@ -233,12 +240,15 @@ function showDetailChart(stats, type) {
     const unit = type === 'swim' ? 'm' : 'km';
 
     let barHtml = '';
+    tips[idx] = null;
     if (s && type === 'run' && val > 0) {
       const z = [s.hr_z1_percent, s.hr_z2_percent, s.hr_z3_percent, s.hr_z4_percent, s.hr_z5_percent];
       const total = z.reduce((a, b) => a + b, 0);
       if (total > 0) {
         // 心拍ゾーンデータがある場合は色分け
         barHtml = z.map((v, i) => `<div class="bar-z${i+1}" style="width:${(v/total)*pct}%"></div>`).join('');
+        // ホバー/タップ用のゾーン割合ツールチップ
+        tips[idx] = `<strong>${label}</strong>　` + z.map((v, i) => `<span class="tz" style="color:${ZONE_COLORS[i]}">Z${i+1} ${v.toFixed(1)}%</span>`).join('');
       } else {
         // 心拍ゾーンデータがない場合は単色
         barHtml = `<div class="bar-z2" style="width:${pct}%"></div>`;
@@ -247,12 +257,24 @@ function showDetailChart(stats, type) {
       barHtml = `<div class="bar-z2" style="width:${pct}%"></div>`;
     }
 
-    return `<div class="chart-row">
+    return `<div class="chart-row" data-idx="${idx}">
       <span class="chart-label">${label}</span>
       <div class="chart-bar-wrap">${barHtml}</div>
       <span class="chart-value">${val > 0 ? val.toFixed(1) + unit : '-'}</span>
     </div>`;
   }).join('');
+
+  // ツールチップ（PCはホバー、スマホはタップでゾーン割合を表示）
+  if (tooltip) {
+    container.querySelectorAll('.chart-row').forEach(row => {
+      const tip = tips[row.dataset.idx];
+      if (!tip) return;
+      row.style.cursor = 'pointer';
+      const show = () => { tooltip.innerHTML = tip; tooltip.classList.add('show'); };
+      row.addEventListener('mouseenter', show);
+      row.addEventListener('click', show);
+    });
+  }
 }
 
 document.getElementById('modalClose').addEventListener('click', () => {
