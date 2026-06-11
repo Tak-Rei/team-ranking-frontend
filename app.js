@@ -119,6 +119,16 @@ async function loadRanking() {
   }
 }
 
+// "h:mm:ss" や "mm:ss" を秒数に変換（空欄/不正はInfinity＝末尾）
+function timeToSeconds(t) {
+  if (!t || typeof t !== 'string') return Infinity;
+  const parts = t.split(':').map(Number);
+  if (parts.some(isNaN)) return Infinity;
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return Infinity;
+}
+
 function renderRanking() {
   let data = [...allData];
 
@@ -127,6 +137,15 @@ function renderRanking() {
   }
 
   data.sort((a, b) => {
+    // マラソンベストはタイムを秒に変換して比較（空欄は常に末尾）
+    if (sortCol === 'full_marathon_best' || sortCol === 'half_marathon_best') {
+      const va = timeToSeconds(a.users?.[sortCol]);
+      const vb = timeToSeconds(b.users?.[sortCol]);
+      if (va === Infinity && vb === Infinity) return 0;
+      if (va === Infinity) return 1;
+      if (vb === Infinity) return -1;
+      return sortAsc ? va - vb : vb - va;
+    }
     let va = a[sortCol] ?? a.users?.[sortCol] ?? '';
     let vb = b[sortCol] ?? b.users?.[sortCol] ?? '';
     if (typeof va === 'number' && typeof vb === 'number') {
