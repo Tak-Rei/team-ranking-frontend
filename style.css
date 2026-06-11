@@ -168,6 +168,7 @@ tbody td {
 .team-リバティースタッフ { background: #2a3a1a; color: #d4f57d; }
 
 .num { text-align: center; font-variant-numeric: tabular-nums; }
+.tc { text-align: center; }
 .private { color: #555; font-style: italic; }
 
 .loading { text-align: center; padding: 40px; color: #555; }
