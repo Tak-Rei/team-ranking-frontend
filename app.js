@@ -309,13 +309,30 @@ async function loadChat() {
     }
     chatMessagesEl.innerHTML = msgs.map(m => {
       const name = m.users?.nickname || '名無し';
-      const dt = new Date(m.created_at);
+      // created_atはUTC（タイムゾーン指示子なし）なのでZを付けてローカル時刻に変換
+      const iso = (m.created_at.endsWith('Z') || m.created_at.includes('+')) ? m.created_at : m.created_at + 'Z';
+      const dt = new Date(iso);
       const dateStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+      const delBtn = (currentUserId && String(m.user_id) === String(currentUserId)) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
       return `<div class="chat-msg">
-        <div class="chat-msg-head"><span class="chat-name">${escapeHtml(name)}</span><span class="chat-time">${dateStr}</span></div>
+        <div class="chat-msg-head"><span class="chat-name">${escapeHtml(name)}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
         <div class="chat-msg-body">${escapeHtml(m.message)}</div>
       </div>`;
     }).join('');
+    // 削除ボタン（本人の投稿のみ）
+    chatMessagesEl.querySelectorAll('.chat-del').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('この投稿を削除しますか？')) return;
+        try {
+          const res = await fetch(`${API_BASE}/api/chat/${btn.dataset.id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: currentUserId })
+          });
+          if (res.ok) loadChat();
+        } catch (e) {}
+      });
+    });
   } catch (e) {
     chatMessagesEl.innerHTML = '<p class="chat-empty">読み込みエラー</p>';
   }

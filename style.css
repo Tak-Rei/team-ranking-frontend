@@ -446,3 +446,13 @@ tbody td {
   cursor: pointer;
 }
 .chat-login-note { color: #666; font-size: 0.85rem; }
+.chat-del {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.7rem;
+  cursor: pointer;
+  margin-left: 10px;
+  text-decoration: underline;
+}
+.chat-del:hover { color: #f57d7d; }
