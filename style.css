@@ -473,3 +473,11 @@ tbody td {
   .mobile-team { display: block; margin-top: 3px; }
   .mobile-team .team-badge { font-size: 10px; padding: 1px 5px; }
 }
+
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 8px; margin: 12px 0; }
+.detail-grid > div { background: #222; border-radius: 6px; padding: 6px 9px; }
+.detail-grid span { display: block; color: #888; font-size: 0.72rem; }
+.detail-grid b { color: #e0e0e0; font-weight: 500; font-size: 0.95rem; }
+.detail-row { font-size: 0.85rem; color: #bbb; margin: 5px 0; }
+.detail-row span { color: #888; }
+.detail-meta { margin: 4px 0 0; }

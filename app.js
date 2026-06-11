@@ -195,6 +195,27 @@ function renderRanking() {
 }
 
 // 詳細モーダル
+function renderDetailSummary(user, stats) {
+  const cur = stats.find(s => s.year_month === currentYearMonth) || {};
+  const teamKey = (user.team || '').replace('.', '').replace('元リバティー', 'liberty');
+  const teamBadge = user.team ? `<span class="team-badge team-${teamKey}">${user.team}</span>` : '';
+  const g = (label, val) => `<div><span>${label}</span><b>${val}</b></div>`;
+  document.getElementById('detailSummary').innerHTML = `
+    <div class="detail-meta">${teamBadge}</div>
+    <div class="detail-grid">
+      ${g('今月ラン', (cur.run_distance_km || 0).toFixed(1) + 'km')}
+      ${g('自転車', (cur.ride_distance_km || 0).toFixed(1) + 'km')}
+      ${g('水泳', (cur.swim_distance_m || 0) + 'm')}
+      ${g('獲得標高', (cur.elevation_gain_m || 0) + 'm')}
+      ${g('心拍負荷', cur.relative_effort || 0)}
+      ${g('フルベスト', user.full_marathon_best || '-')}
+      ${g('ハーフベスト', user.half_marathon_best || '-')}
+    </div>
+    ${user.race ? `<div class="detail-row"><span>参加予定レース：</span>${escapeHtml(user.race)}</div>` : ''}
+    ${user.comment ? `<div class="detail-row"><span>コメント：</span>${escapeHtml(user.comment)}</div>` : ''}
+  `;
+}
+
 async function openDetail(userId) {
   try {
     const res = await fetch(`${API_BASE}/api/user/${userId}`);
@@ -202,6 +223,7 @@ async function openDetail(userId) {
     const { user, stats } = await res.json();
 
     document.getElementById('modalTitle').textContent = user.nickname;
+    renderDetailSummary(user, stats);
     showDetailChart(stats, 'run');
     document.getElementById('detailModal').classList.add('open');
 
