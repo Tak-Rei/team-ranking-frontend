@@ -109,13 +109,13 @@ document.querySelectorAll('th.sortable').forEach(th => {
 
 // データ取得
 async function loadRanking() {
-  document.getElementById('rankingBody').innerHTML = '<tr><td colspan="12" class="loading">読み込み中...</td></tr>';
+  document.getElementById('rankingBody').innerHTML = '<tr><td colspan="13" class="loading">読み込み中...</td></tr>';
   try {
     const res = await fetch(`${API_BASE}/api/ranking?year_month=${currentYearMonth}`);
     allData = await res.json();
     renderRanking();
   } catch (e) {
-    document.getElementById('rankingBody').innerHTML = '<tr><td colspan="12" class="loading">読み込みエラー</td></tr>';
+    document.getElementById('rankingBody').innerHTML = '<tr><td colspan="13" class="loading">読み込みエラー</td></tr>';
   }
 }
 
@@ -156,7 +156,7 @@ function renderRanking() {
 
   const tbody = document.getElementById('rankingBody');
   if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="12" class="loading">データなし</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" class="loading">データなし</td></tr>';
     return;
   }
 
@@ -171,6 +171,7 @@ function renderRanking() {
     const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '<span class="private">非公開</span>';
     const re = u.privacy_re !== false ? (row.relative_effort ?? 0) : '<span class="private">非公開</span>';
+    const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '<span class="private">非公開</span>';
     const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '<span class="private">非公開</span>';
     const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '<span class="private">非公開</span>';
 
@@ -182,6 +183,7 @@ function renderRanking() {
       <td class="num">${runKm}</td>
       <td class="num">${rideKm}</td>
       <td class="num">${swimM}</td>
+      <td class="num">${elev}</td>
       <td class="num">${re}</td>
       <td class="tc">${fullMara}</td>
       <td class="tc">${halfMara}</td>
