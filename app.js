@@ -117,6 +117,7 @@ async function loadRanking() {
   } catch (e) {
     document.getElementById('rankingBody').innerHTML = '<tr><td colspan="13" class="loading">読み込みエラー</td></tr>';
   }
+  loadChat();
 }
 
 // "h:mm:ss" や "mm:ss" を秒数に変換（空欄/不正はInfinity＝末尾）
@@ -281,6 +282,63 @@ function showDetailChart(stats, type) {
 
 document.getElementById('modalClose').addEventListener('click', () => {
   document.getElementById('detailModal').classList.remove('open');
+});
+
+// ========== チャット ==========
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+async function loadChat() {
+  const [y, mo] = currentYearMonth.split('-');
+  document.getElementById('chatTitle').textContent = `💬 ${y}年${parseInt(mo)}月のひとこと掲示板`;
+  if (currentUserId) {
+    document.getElementById('chatInputRow').style.display = 'flex';
+    document.getElementById('chatLoginNote').style.display = 'none';
+  } else {
+    document.getElementById('chatInputRow').style.display = 'none';
+    document.getElementById('chatLoginNote').style.display = 'block';
+  }
+  const chatMessagesEl = document.getElementById('chatMessages');
+  try {
+    const res = await fetch(`${API_BASE}/api/chat?year_month=${currentYearMonth}`);
+    const msgs = await res.json();
+    if (!Array.isArray(msgs) || msgs.length === 0) {
+      chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
+      return;
+    }
+    chatMessagesEl.innerHTML = msgs.map(m => {
+      const name = m.users?.nickname || '名無し';
+      const dt = new Date(m.created_at);
+      const dateStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+      return `<div class="chat-msg">
+        <div class="chat-msg-head"><span class="chat-name">${escapeHtml(name)}</span><span class="chat-time">${dateStr}</span></div>
+        <div class="chat-msg-body">${escapeHtml(m.message)}</div>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    chatMessagesEl.innerHTML = '<p class="chat-empty">読み込みエラー</p>';
+  }
+}
+
+document.getElementById('chatSend').addEventListener('click', async () => {
+  const input = document.getElementById('chatText');
+  const text = input.value.trim();
+  if (!text || !currentUserId) return;
+  const btn = document.getElementById('chatSend');
+  btn.disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUserId, year_month: currentYearMonth, message: text })
+    });
+    if (res.ok) {
+      input.value = '';
+      loadChat();
+    }
+  } catch (e) {}
+  btn.disabled = false;
 });
 
 // 初期化

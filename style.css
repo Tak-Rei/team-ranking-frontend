@@ -397,3 +397,52 @@ tbody td {
 }
 .alert-success { background: #1e3a2f; border: 1px solid #2d6a4f; color: #7df5a0; }
 .alert-error { background: #3a1a1a; border: 1px solid #6a2d2d; color: #f57d7d; }
+
+/* チャット（ひとこと掲示板） */
+.chat-section {
+  max-width: 760px;
+  margin: 24px auto 60px;
+  padding: 0 16px;
+}
+.chat-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #fc4c02;
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.chat-msg {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.chat-msg-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.chat-name { font-weight: 600; color: #fc4c02; font-size: 0.85rem; }
+.chat-time { color: #666; font-size: 0.75rem; }
+.chat-msg-body { font-size: 0.9rem; color: #e0e0e0; white-space: pre-wrap; word-break: break-word; }
+.chat-empty { color: #555; font-size: 0.85rem; text-align: center; padding: 16px; }
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input-row input {
+  flex: 1;
+  background: #222;
+  border: 1px solid #444;
+  color: #e0e0e0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.chat-input-row input:focus { outline: none; border-color: #fc4c02; }
+.chat-input-row button {
+  background: #fc4c02;
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.chat-login-note { color: #666; font-size: 0.85rem; }
