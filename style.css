@@ -161,9 +161,9 @@ tbody td {
   font-weight: 600;
 }
 
-.team-3SHINE { background: #1a3a5c; color: #7dc8f5; }
-.team-SKY35 { background: #1a3a2a; color: #7df5a0; }
-.team-Be4 { background: #3a1a3a; color: #f57df5; }
+.team-3SHINE { background: #3a3416; color: #f5e07d; }
+.team-SKY35 { background: #16323a; color: #7de0f5; }
+.team-Be4 { background: #3a1a30; color: #f57db5; }
 .team-liberty { background: #3a2a1a; color: #f5c07d; }
 .team-リバティースタッフ { background: #2a3a1a; color: #d4f57d; }
 
@@ -456,3 +456,20 @@ tbody td {
   text-decoration: underline;
 }
 .chat-del:hover { color: #f57d7d; }
+
+/* スマホ対応 */
+.mobile-team { display: none; }
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1rem; }
+  table { font-size: 11px; }
+  thead th, tbody td { padding: 7px 3px; }
+  thead th { white-space: normal; }
+  thead th:nth-child(3), tbody td:nth-child(3),
+  thead th:nth-child(4), tbody td:nth-child(4),
+  thead th:nth-child(11), tbody td:nth-child(11),
+  thead th:nth-child(12), tbody td:nth-child(12),
+  thead th:nth-child(13), tbody td:nth-child(13) { display: none; }
+  .mobile-team { display: block; margin-top: 3px; }
+  .mobile-team .team-badge { font-size: 10px; padding: 1px 5px; }
+}

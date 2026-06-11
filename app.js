@@ -178,7 +178,7 @@ function renderRanking() {
 
     return `<tr>
       <td class="rank ${rankClass}">${rank}</td>
-      <td class="nickname tc" ondblclick="openDetail('${row.user_id}')">${u.nickname || '未設定'}</td>
+      <td class="nickname tc" onclick="openDetail('${row.user_id}')">${u.nickname || '未設定'}<span class="mobile-team">${teamBadge}</span></td>
       <td class="tc">${stravaName}</td>
       <td>${teamBadge}</td>
       <td class="num">${runKm}</td>
