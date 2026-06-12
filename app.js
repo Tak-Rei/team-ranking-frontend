@@ -247,8 +247,9 @@ function renderDetailSummary(user, stats) {
   const teamKey = (user.team || '').replace('.', '').replace('元リバティー', 'liberty');
   const teamBadge = user.team ? `<span class="team-badge team-${teamKey}">${user.team}</span>` : '';
   const g = (label, val) => `<div><span>${label}</span><b>${val}</b></div>`;
+  const stravaName = (user.display_strava_name && user.strava_name) ? `<span style="color:#888; font-size:0.85rem; margin-left:8px;">${escapeHtml(user.strava_name)}</span>` : '';
   document.getElementById('detailSummary').innerHTML = `
-    <div class="detail-meta">${teamBadge}</div>
+    <div class="detail-meta">${teamBadge}${stravaName}</div>
     <div class="detail-grid">
       ${g('今月ラン', (cur.run_distance_km || 0).toFixed(1) + 'km')}
       ${g('自転車', (cur.ride_distance_km || 0).toFixed(1) + 'km')}
