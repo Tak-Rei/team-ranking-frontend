@@ -366,7 +366,7 @@ function escapeHtml(s) {
 
 async function loadChat() {
   const [y, mo] = currentYearMonth.split('-');
-  document.getElementById('chatTitle').textContent = `💬 ${y}年${parseInt(mo)}月のひとこと掲示板`;
+  document.getElementById('chatTitle').textContent = `💬 ${y}年${parseInt(mo)}月の掲示板`;
   if (currentUserId) {
     document.getElementById('chatInputRow').style.display = 'flex';
     document.getElementById('chatLoginNote').style.display = 'none';
