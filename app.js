@@ -5,6 +5,36 @@ const API_BASE = window.location.hostname === 'localhost'
 let currentUserId = localStorage.getItem('userId');
 let currentYearMonth = new Date().toISOString().slice(0, 7);
 let allData = [];
+
+// アクセス合言葉ゲート（初回のみ入力、localStorageで記憶）
+if (!localStorage.getItem('access_granted')) {
+  const gate = document.getElementById('passwordGate');
+  if (gate) gate.style.display = 'flex';
+}
+{
+  const pwSubmit = document.getElementById('passwordSubmit');
+  if (pwSubmit) {
+    const tryPw = async () => {
+      const pw = document.getElementById('passwordInput').value;
+      try {
+        const res = await fetch(`${API_BASE}/api/verify-password`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('access_granted', '1');
+          document.getElementById('passwordGate').style.display = 'none';
+        } else {
+          document.getElementById('passwordError').style.display = 'block';
+        }
+      } catch (e) {
+        document.getElementById('passwordError').style.display = 'block';
+      }
+    };
+    pwSubmit.addEventListener('click', tryPw);
+    document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryPw(); });
+  }
+}
 let sortCol = 'run_distance_km';
 let sortAsc = false;
 let currentTeamFilter = 'all';
