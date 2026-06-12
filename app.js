@@ -314,14 +314,19 @@ function showDetailChart(stats, type) {
 
     let barHtml = '';
     tips[idx] = null;
-    if (s && type === 'run' && val > 0) {
-      const z = [s.hr_z1_percent, s.hr_z2_percent, s.hr_z3_percent, s.hr_z4_percent, s.hr_z5_percent];
-      const total = z.reduce((a, b) => a + b, 0);
+    let z = null;
+    if (s) {
+      if (type === 'run') z = [s.hr_z1_percent, s.hr_z2_percent, s.hr_z3_percent, s.hr_z4_percent, s.hr_z5_percent];
+      else if (type === 'ride') z = [s.ride_hr_z1_percent, s.ride_hr_z2_percent, s.ride_hr_z3_percent, s.ride_hr_z4_percent, s.ride_hr_z5_percent];
+      else if (type === 'swim') z = [s.swim_hr_z1_percent, s.swim_hr_z2_percent, s.swim_hr_z3_percent, s.swim_hr_z4_percent, s.swim_hr_z5_percent];
+    }
+    if (z && val > 0) {
+      const total = z.reduce((a, b) => a + (b || 0), 0);
       if (total > 0) {
         // 心拍ゾーンデータがある場合は色分け
-        barHtml = z.map((v, i) => `<div class="bar-z${i+1}" style="width:${(v/total)*pct}%"></div>`).join('');
+        barHtml = z.map((v, i) => `<div class="bar-z${i+1}" style="width:${((v||0)/total)*pct}%"></div>`).join('');
         // ホバー/タップ用のゾーン割合ツールチップ
-        tips[idx] = `<strong>${label}</strong>　` + z.map((v, i) => `<span class="tz" style="color:${ZONE_COLORS[i]}">Z${i+1} ${v.toFixed(1)}%</span>`).join('');
+        tips[idx] = `<strong>${label}</strong>　` + z.map((v, i) => `<span class="tz" style="color:${ZONE_COLORS[i]}">Z${i+1} ${(v||0).toFixed(1)}%</span>`).join('');
       } else {
         // 心拍ゾーンデータがない場合は単色
         barHtml = `<div class="bar-z2" style="width:${pct}%"></div>`;
