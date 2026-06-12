@@ -137,6 +137,13 @@
         </label>
       </div>
 
+      <p class="section-title">管理者用</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">管理者キーを入力して保存すると、不適切な参加者やコメントを削除できる管理者モードになります（管理者のみ・空欄なら通常モード）。</p>
+      <div class="form-group">
+        <label>管理者キー</label>
+        <input type="password" id="adminSecret" placeholder="管理者だけが知るキー">
+      </div>
+
       <button type="submit" class="save-btn">保存する</button>
     </form>
 
@@ -189,10 +196,14 @@
       document.getElementById('hrZ3Min').value = data.hr_z3_min ?? '';
       document.getElementById('hrZ4Min').value = data.hr_z4_min ?? '';
       document.getElementById('hrZ5Min').value = data.hr_z5_min ?? '';
+      document.getElementById('adminSecret').value = localStorage.getItem('admin_secret') || '';
     }
 
     document.getElementById('settingsForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const adminKey = document.getElementById('adminSecret').value.trim();
+      if (adminKey) localStorage.setItem('admin_secret', adminKey);
+      else localStorage.removeItem('admin_secret');
       const body = {
         nickname: document.getElementById('nickname').value,
         display_strava_name: document.getElementById('displayStravaName').checked,

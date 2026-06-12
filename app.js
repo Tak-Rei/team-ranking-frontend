@@ -38,6 +38,7 @@ if (!localStorage.getItem('access_granted')) {
 let sortCol = 'run_distance_km';
 let sortAsc = false;
 let currentTeamFilter = 'all';
+const isAdmin = !!localStorage.getItem('admin_secret');
 
 // URLパラメータ処理（OAuth後のリダイレクト）
 const params = new URLSearchParams(window.location.search);
@@ -208,7 +209,7 @@ function renderRanking() {
 
     return `<tr>
       <td class="rank ${rankClass}">${rank}</td>
-      <td class="nickname tc" onclick="openDetail('${row.user_id}')">${u.nickname || '未設定'}<span class="mobile-team">${teamBadge}</span></td>
+      <td class="nickname tc" onclick="openDetail('${row.user_id}')">${u.nickname || '未設定'}<span class="mobile-team">${teamBadge}</span>${isAdmin ? `<button class="admin-del" data-uid="${row.user_id}" data-name="${escapeHtml(u.nickname || '未設定')}">×</button>` : ''}</td>
       <td class="tc">${stravaName}</td>
       <td>${teamBadge}</td>
       <td class="num">${runKm}</td>
@@ -222,6 +223,22 @@ function renderRanking() {
       <td>${u.comment || ''}</td>
     </tr>`;
   }).join('');
+
+  if (isAdmin) {
+    tbody.querySelectorAll('.admin-del').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!confirm(`${btn.dataset.name} さんを削除しますか？（記録もすべて消えます）`)) return;
+        try {
+          const res = await fetch(`${API_BASE}/api/admin/user/${btn.dataset.uid}`, {
+            method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin_secret: localStorage.getItem('admin_secret') })
+          });
+          if (res.ok) loadRanking();
+          else alert('削除できませんでした（管理者キーを確認してください）');
+        } catch (err) {}
+      });
+    });
+  }
 }
 
 // 詳細モーダル
@@ -365,7 +382,7 @@ async function loadChat() {
       const iso = (m.created_at.endsWith('Z') || m.created_at.includes('+')) ? m.created_at : m.created_at + 'Z';
       const dt = new Date(iso);
       const dateStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
-      const delBtn = (currentUserId && String(m.user_id) === String(currentUserId)) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
+      const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
       return `<div class="chat-msg">
         <div class="chat-msg-head"><span class="chat-name">${escapeHtml(name)}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
         <div class="chat-msg-body">${escapeHtml(m.message)}</div>
@@ -379,7 +396,7 @@ async function loadChat() {
           const res = await fetch(`${API_BASE}/api/chat/${btn.dataset.id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: currentUserId })
+            body: JSON.stringify({ user_id: currentUserId, admin_secret: localStorage.getItem('admin_secret') })
           });
           if (res.ok) loadChat();
         } catch (e) {}
