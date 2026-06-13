@@ -7,28 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <button id="langToggle" class="lang-toggle">EN</button>
   <div class="settings-container">
-    <button class="back-btn" onclick="history.back()">← ランキングに戻る</button>
-    <h2>設定</h2>
+    <button class="back-btn" onclick="history.back()" data-i18n="back">← ランキングに戻る</button>
+    <h2 data-i18n="title">設定</h2>
 
     <div id="alertBox" style="display:none"></div>
 
     <div id="loginRequired" style="display:none">
-      <p style="margin-bottom:16px;color:#aaa">設定を変更するにはStravaログインが必要です。</p>
+      <p style="margin-bottom:16px;color:#aaa" data-i18n="loginReq">設定を変更するにはStravaログインが必要です。</p>
       <button id="loginBtn" class="strava-connect-btn" aria-label="Connect with Strava"><img src="img/btn_strava_connect_with_orange.svg" alt="Connect with Strava"></button>
-      <p class="privacy-note privacy-note-dark">接続して取得するのは <b>走行距離・獲得標高・心拍数・プロフィール名</b> だけです。<b>位置情報（GPS・地図・場所）は取得も保存もしません。</b> <a href="privacy.html">詳しく ›</a></p>
+      <p class="privacy-note privacy-note-dark" data-i18n="loginNote">接続して取得するのは <b>走行距離・獲得標高・心拍数・プロフィール名</b> だけです。<b>位置情報（GPS・地図・場所）は取得も保存もしません。</b> <a href="privacy.html">詳しく ›</a></p>
     </div>
 
     <form id="settingsForm" style="display:none">
-      <p class="section-title">プロフィール</p>
+      <p class="section-title" data-i18n="sec.profile">プロフィール</p>
 
       <div class="form-group">
-        <label>ニックネーム <span style="color:#fc4c02">*</span></label>
-        <input type="text" id="nickname" maxlength="30" placeholder="ランキングに表示される名前" required>
+        <label data-i18n="lbl.nickname">ニックネーム <span style="color:#fc4c02">*</span></label>
+        <input type="text" id="nickname" maxlength="30" data-i18n-ph="ph.nickname" placeholder="ランキングに表示される名前" required>
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">Stravaアカウント名を表示する</span>
+        <span class="toggle-label" data-i18n="tgl.stravaName">Stravaアカウント名を表示する</span>
         <label class="toggle">
           <input type="checkbox" id="displayStravaName">
           <span class="toggle-slider"></span>
@@ -36,9 +37,9 @@
       </div>
 
       <div class="form-group" style="margin-top:16px">
-        <label>チーム</label>
+        <label data-i18n="lbl.team">チーム</label>
         <select id="team">
-          <option value="">選択してください</option>
+          <option value="" data-i18n="opt.select">選択してください</option>
           <option value="3SHINE">3SHINE</option>
           <option value="SKY3.5">SKY3.5</option>
           <option value="Be4">Be4</option>
@@ -48,50 +49,50 @@
       </div>
 
       <div class="form-group">
-        <label>参加予定レース</label>
-        <input type="text" id="race" maxlength="100" placeholder="例: 富士登山競走、UTMF">
+        <label data-i18n="lbl.race">参加予定レース</label>
+        <input type="text" id="race" maxlength="100" data-i18n-ph="ph.race" placeholder="例: 富士登山競走、UTMF">
       </div>
 
       <div class="form-group">
-        <label>フルマラソンベスト</label>
-        <input type="text" id="fullMarathon" maxlength="20" placeholder="例: 3:25:30">
+        <label data-i18n="lbl.full">フルマラソンベスト</label>
+        <input type="text" id="fullMarathon" maxlength="20" data-i18n-ph="ph.full" placeholder="例: 3:25:30">
       </div>
 
       <div class="form-group">
-        <label>ハーフマラソンベスト</label>
-        <input type="text" id="halfMarathon" maxlength="20" placeholder="例: 1:35:00">
+        <label data-i18n="lbl.half">ハーフマラソンベスト</label>
+        <input type="text" id="halfMarathon" maxlength="20" data-i18n-ph="ph.half" placeholder="例: 1:35:00">
       </div>
 
       <div class="form-group">
-        <label>コメント</label>
-        <textarea id="comment" maxlength="200" placeholder="一言コメント"></textarea>
+        <label data-i18n="lbl.comment">コメント</label>
+        <textarea id="comment" maxlength="200" data-i18n-ph="ph.comment" placeholder="一言コメント"></textarea>
       </div>
 
-      <p class="section-title">心拍ゾーン設定</p>
-      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">各ゾーンの下限の心拍数（bpm）を入力すると、その値で色分けします。ガーミン等の時計の設定に合わせると、普段見ている数字と一致します。空欄の場合はStravaの設定を使います。変更したら下の「Stravaデータを再取得」を押すと過去のグラフにも反映されます。</p>
+      <p class="section-title" data-i18n="sec.hr">心拍ゾーン設定</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px" data-i18n="hr.note">各ゾーンの下限の心拍数（bpm）を入力すると、その値で色分けします。ガーミン等の時計の設定に合わせると、普段見ている数字と一致します。空欄の場合はStravaの設定を使います。変更したら下の「Stravaデータを再取得」を押すと過去のグラフにも反映されます。</p>
 
       <div class="form-group">
-        <label>ゾーン2の下限（これ未満がゾーン1）</label>
-        <input type="number" id="hrZ2Min" min="0" max="250" placeholder="例: 117">
+        <label data-i18n="lbl.z2">ゾーン2の下限（これ未満がゾーン1）</label>
+        <input type="number" id="hrZ2Min" min="0" max="250" data-i18n-ph="ph.z2" placeholder="例: 117">
       </div>
       <div class="form-group">
-        <label>ゾーン3の下限</label>
-        <input type="number" id="hrZ3Min" min="0" max="250" placeholder="例: 146">
+        <label data-i18n="lbl.z3">ゾーン3の下限</label>
+        <input type="number" id="hrZ3Min" min="0" max="250" data-i18n-ph="ph.z3" placeholder="例: 146">
       </div>
       <div class="form-group">
-        <label>ゾーン4の下限</label>
-        <input type="number" id="hrZ4Min" min="0" max="250" placeholder="例: 160">
+        <label data-i18n="lbl.z4">ゾーン4の下限</label>
+        <input type="number" id="hrZ4Min" min="0" max="250" data-i18n-ph="ph.z4" placeholder="例: 160">
       </div>
       <div class="form-group">
-        <label>ゾーン5の下限</label>
-        <input type="number" id="hrZ5Min" min="0" max="250" placeholder="例: 175">
+        <label data-i18n="lbl.z5">ゾーン5の下限</label>
+        <input type="number" id="hrZ5Min" min="0" max="250" data-i18n-ph="ph.z5" placeholder="例: 175">
       </div>
 
-      <p class="section-title">プライバシー設定</p>
-      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">OFFにするとランキングで非公開表示になります</p>
+      <p class="section-title" data-i18n="sec.privacy">プライバシー設定</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px" data-i18n="privacy.note">OFFにするとランキングで非公開表示になります</p>
 
       <div class="toggle-row">
-        <span class="toggle-label">月間距離を公開する</span>
+        <span class="toggle-label" data-i18n="tgl.distance">月間距離を公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyDistance" checked>
           <span class="toggle-slider"></span>
@@ -99,16 +100,16 @@
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">心拍データを公開する</span>
+        <span class="toggle-label" data-i18n="tgl.hr">心拍データを公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyHeartrate" checked>
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px">ONにすると、ランキングの「心拍負荷」の数値と、詳細グラフの心拍ゾーン色分け（各ゾーンの滞在割合）が他のメンバーに表示されます。正確な心拍数(bpm)は表示されません。OFFにすると数値も色分けもすべて非公開になります。</p>
+      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px" data-i18n="tgl.hr.note">ONにすると、ランキングの「心拍負荷」の数値と、詳細グラフの心拍ゾーン色分け（各ゾーンの滞在割合）が他のメンバーに表示されます。正確な心拍数(bpm)は表示されません。OFFにすると数値も色分けもすべて非公開になります。</p>
 
       <div class="toggle-row">
-        <span class="toggle-label">詳細ページを公開する</span>
+        <span class="toggle-label" data-i18n="tgl.detail">詳細ページを公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyDetail" checked>
           <span class="toggle-slider"></span>
@@ -116,7 +117,7 @@
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">フルマラソンベストを公開する</span>
+        <span class="toggle-label" data-i18n="tgl.full">フルマラソンベストを公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyFullMarathon" checked>
           <span class="toggle-slider"></span>
@@ -124,7 +125,7 @@
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">ハーフマラソンベストを公開する</span>
+        <span class="toggle-label" data-i18n="tgl.half">ハーフマラソンベストを公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyHalfMarathon" checked>
           <span class="toggle-slider"></span>
@@ -132,33 +133,33 @@
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">個人情報を隠す（SNS共有用）</span>
+        <span class="toggle-label" data-i18n="tgl.anon">個人情報を隠す（SNS共有用）</span>
         <label class="toggle">
           <input type="checkbox" id="privacyAnonymous">
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px">ONにすると、あなたのニックネームが「-」になり、Stravaアカウント名や掲示板での名前も他のメンバーから見えなくなります。SNSへの投稿やスクリーンショットで個人情報を隠したいときに使えます（詳細ページは引き続き開けます）。</p>
+      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px" data-i18n="tgl.anon.note">ONにすると、あなたのニックネームが「-」になり、Stravaアカウント名や掲示板での名前も他のメンバーから見えなくなります。SNSへの投稿やスクリーンショットで個人情報を隠したいときに使えます（詳細ページは引き続き開けます）。</p>
 
-      <p class="section-title">管理者用</p>
+      <p class="section-title" data-i18n="sec.admin">管理者用</p>
       <div class="form-group">
-        <label>管理者キー</label>
+        <label data-i18n="lbl.adminKey">管理者キー</label>
         <input type="password" id="adminSecret">
       </div>
 
-      <button type="submit" class="save-btn">保存する</button>
+      <button type="submit" class="save-btn" data-i18n="btn.save">保存する</button>
     </form>
 
     <div id="resyncSection" style="display:none;margin-top:28px">
-      <p class="section-title">データ更新</p>
-      <p style="font-size:0.8rem;color:#666;margin-bottom:12px">Stravaから走行データと心拍ゾーンを再取得します。心拍ゾーンの色分けは直近の月から順番に反映されます（一度に約4ヶ月分）。色がまだ付いていない月がある場合は、時間を置いて数回押してください。</p>
-      <button type="button" class="save-btn" id="resyncBtn" style="background:#444">Stravaデータを再取得</button>
+      <p class="section-title" data-i18n="sec.refresh">データ更新</p>
+      <p style="font-size:0.8rem;color:#666;margin-bottom:12px" data-i18n="refresh.note">Stravaから走行データと心拍ゾーンを再取得します。心拍ゾーンの色分けは直近の月から順番に反映されます（一度に約4ヶ月分）。色がまだ付いていない月がある場合は、時間を置いて数回押してください。</p>
+      <button type="button" class="save-btn" id="resyncBtn" style="background:#444" data-i18n="btn.resync">Stravaデータを再取得</button>
     </div>
 
     <div id="logoutSection" style="display:none;margin-top:28px">
-      <p class="section-title">アカウント</p>
-      <button type="button" class="logout-btn" id="logoutBtn">ログアウト</button>
-      <p style="font-size:0.75rem;color:#666;margin-top:8px">ログイン画面（Connect with Stravaボタン）を確認したいときに使います。合言葉の再入力は不要です。</p>
+      <p class="section-title" data-i18n="sec.account">アカウント</p>
+      <button type="button" class="logout-btn" id="logoutBtn" data-i18n="btn.logout">ログアウト</button>
+      <p style="font-size:0.75rem;color:#666;margin-top:8px" data-i18n="logout.note">ログイン画面（Connect with Stravaボタン）を確認したいときに使います。合言葉の再入力は不要です。</p>
     </div>
   </div>
 
@@ -166,6 +167,97 @@
     const API_BASE = window.location.hostname === 'localhost'
       ? 'http://localhost:3000'
       : 'https://team-ranking-backend.onrender.com';
+
+    // ===== 多言語（日本語はHTML初期テキスト、英語は辞書） =====
+    let lang = localStorage.getItem('lang') || 'ja';
+    const EN = {
+      'back': '← Back to ranking',
+      'title': 'Settings',
+      'loginReq': 'You need to connect with Strava to change settings.',
+      'loginNote': 'We only read your <b>distance, elevation gain, heart rate, and profile name</b>. <b>We never collect or store location data (GPS, maps, places).</b> <a href="privacy.html">Learn more ›</a>',
+      'sec.profile': 'Profile',
+      'lbl.nickname': 'Nickname <span style="color:#fc4c02">*</span>',
+      'ph.nickname': 'Name shown in the ranking',
+      'tgl.stravaName': 'Show Strava account name',
+      'lbl.team': 'Team',
+      'opt.select': 'Select...',
+      'lbl.race': 'Upcoming races',
+      'ph.race': 'e.g. Mt. Fuji Race, UTMF',
+      'lbl.full': 'Full marathon PB',
+      'lbl.half': 'Half marathon PB',
+      'lbl.comment': 'Comment',
+      'ph.comment': 'A short comment',
+      'ph.full': 'e.g. 3:25:30',
+      'ph.half': 'e.g. 1:35:00',
+      'ph.z2': 'e.g. 117',
+      'ph.z3': 'e.g. 146',
+      'ph.z4': 'e.g. 160',
+      'ph.z5': 'e.g. 175',
+      'sec.hr': 'Heart rate zones',
+      'hr.note': 'Enter the lower heart rate (bpm) for each zone to color-code by those values. Matching your watch (e.g. Garmin) keeps the numbers familiar. Leave blank to use Strava’s settings. After changing, press “Re-fetch Strava data” below to apply to past charts.',
+      'lbl.z2': 'Zone 2 lower bound (below this = Zone 1)',
+      'lbl.z3': 'Zone 3 lower bound',
+      'lbl.z4': 'Zone 4 lower bound',
+      'lbl.z5': 'Zone 5 lower bound',
+      'sec.privacy': 'Privacy',
+      'privacy.note': 'Turning a switch off hides that item in the ranking.',
+      'tgl.distance': 'Show monthly distance',
+      'tgl.hr': 'Show heart-rate data',
+      'tgl.hr.note': 'When on, your “HR load” value and the heart-rate zone colors in the detail chart (time spent in each zone) are visible to other members. Exact bpm is never shown. When off, both are hidden.',
+      'tgl.detail': 'Show detail page',
+      'tgl.full': 'Show full marathon PB',
+      'tgl.half': 'Show half marathon PB',
+      'tgl.anon': 'Hide personal info (for sharing)',
+      'tgl.anon.note': 'When on, your nickname shows as “-”, and your Strava account name and your name on the board are hidden from other members. Useful for hiding personal info when posting screenshots to social media (the detail page can still be opened).',
+      'sec.admin': 'Admin',
+      'lbl.adminKey': 'Admin key',
+      'btn.save': 'Save',
+      'sec.refresh': 'Data refresh',
+      'refresh.note': 'Re-fetch your activity data and heart-rate zones from Strava. Zone colors apply from the most recent months first (about 4 months at a time). If some months still have no color, wait a while and press again a few times.',
+      'btn.resync': 'Re-fetch Strava data',
+      'sec.account': 'Account',
+      'btn.logout': 'Log out',
+      'logout.note': 'Use this to check the login screen (Connect with Strava button). No passcode re-entry needed.'
+    };
+    // 動的に表示する文言（保存結果・再取得中など）
+    const DYN = {
+      ja: {
+        saved: '✓ 設定を保存しました', saveFail: '保存に失敗しました',
+        resyncing: '取得中...（最大1〜2分かかります）', resyncBtn: 'Stravaデータを再取得',
+        resyncOk: '✓ データを再取得しました（心拍ゾーンは直近の月から順次反映されます）',
+        resyncFail: '再取得に失敗しました。少し時間を置いて再度お試しください。',
+        netErr: '通信エラーが発生しました。', logoutConfirm: 'ログアウトしますか？（合言葉の再入力は不要です）'
+      },
+      en: {
+        saved: '✓ Settings saved', saveFail: 'Failed to save',
+        resyncing: 'Fetching... (up to 1–2 min)', resyncBtn: 'Re-fetch Strava data',
+        resyncOk: '✓ Data re-fetched (zone colors apply from the most recent months first)',
+        resyncFail: 'Re-fetch failed. Please wait a bit and try again.',
+        netErr: 'A network error occurred.', logoutConfirm: 'Log out? (No passcode re-entry needed.)'
+      }
+    };
+    function d(key) { return (DYN[lang] || DYN.ja)[key]; }
+    const jaDefault = {}, jaPh = {};
+    document.querySelectorAll('[data-i18n]').forEach(el => { jaDefault[el.dataset.i18n] = el.innerHTML; });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { jaPh[el.dataset.i18nPh] = el.placeholder; });
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.dataset.i18n;
+        el.innerHTML = lang === 'ja' ? (jaDefault[k] ?? el.innerHTML) : (EN[k] ?? jaDefault[k] ?? el.innerHTML);
+      });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const k = el.dataset.i18nPh;
+        el.placeholder = lang === 'ja' ? (jaPh[k] ?? el.placeholder) : (EN[k] ?? jaPh[k] ?? el.placeholder);
+      });
+      document.getElementById('langToggle').textContent = lang === 'ja' ? 'EN' : '日本語';
+    }
+    document.getElementById('langToggle').addEventListener('click', () => {
+      lang = lang === 'ja' ? 'en' : 'ja';
+      localStorage.setItem('lang', lang);
+      applyLang();
+    });
+    applyLang();
 
     const userId = localStorage.getItem('userId');
 
@@ -243,12 +335,12 @@
       alertBox.style.display = 'block';
       if (res.ok) {
         alertBox.className = 'alert alert-success';
-        alertBox.textContent = '✓ 設定を保存しました';
+        alertBox.textContent = d('saved');
         setTimeout(() => { window.location.href = 'index.html'; }, 1200);
       } else {
         const err = await res.json();
         alertBox.className = 'alert alert-error';
-        alertBox.textContent = err.error || '保存に失敗しました';
+        alertBox.textContent = err.error || d('saveFail');
       }
     });
 
@@ -258,24 +350,24 @@
       resyncBtn.addEventListener('click', async () => {
         const alertBox = document.getElementById('alertBox');
         resyncBtn.disabled = true;
-        resyncBtn.textContent = '取得中...（最大1〜2分かかります）';
+        resyncBtn.textContent = d('resyncing');
         try {
           const r = await fetch(`${API_BASE}/api/sync/${userId}`, { method: 'POST' });
           alertBox.style.display = 'block';
           if (r.ok) {
             alertBox.className = 'alert alert-success';
-            alertBox.textContent = '✓ データを再取得しました（心拍ゾーンは直近の月から順次反映されます）';
+            alertBox.textContent = d('resyncOk');
           } else {
             alertBox.className = 'alert alert-error';
-            alertBox.textContent = '再取得に失敗しました。少し時間を置いて再度お試しください。';
+            alertBox.textContent = d('resyncFail');
           }
         } catch (e) {
           alertBox.style.display = 'block';
           alertBox.className = 'alert alert-error';
-          alertBox.textContent = '通信エラーが発生しました。';
+          alertBox.textContent = d('netErr');
         }
         resyncBtn.disabled = false;
-        resyncBtn.textContent = 'Stravaデータを再取得';
+        resyncBtn.textContent = d('resyncBtn');
       });
     }
 
@@ -283,7 +375,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
-        if (!confirm('ログアウトしますか？（合言葉の再入力は不要です）')) return;
+        if (!confirm(d('logoutConfirm'))) return;
         localStorage.removeItem('userId');
         localStorage.removeItem('admin_secret');
         window.location.href = 'index.html';
