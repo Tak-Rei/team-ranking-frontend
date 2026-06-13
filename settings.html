@@ -98,20 +98,13 @@
       </div>
 
       <div class="toggle-row">
-        <span class="toggle-label">心拍ゾーンを公開する</span>
+        <span class="toggle-label">心拍データを公開する</span>
         <label class="toggle">
           <input type="checkbox" id="privacyHeartrate" checked>
           <span class="toggle-slider"></span>
         </label>
       </div>
-
-      <div class="toggle-row">
-        <span class="toggle-label">Relative Effortを公開する</span>
-        <label class="toggle">
-          <input type="checkbox" id="privacyRe" checked>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
+      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px">ONにすると、ランキングの「心拍負荷」の数値と、詳細グラフの心拍ゾーン色分け（各ゾーンの滞在割合）が他のメンバーに表示されます。正確な心拍数(bpm)は表示されません。OFFにすると数値も色分けもすべて非公開になります。</p>
 
       <div class="toggle-row">
         <span class="toggle-label">詳細ページを公開する</span>
@@ -187,7 +180,6 @@
       document.getElementById('comment').value = data.comment || '';
       document.getElementById('privacyDistance').checked = data.privacy_distance !== false;
       document.getElementById('privacyHeartrate').checked = data.privacy_heartrate !== false;
-      document.getElementById('privacyRe').checked = data.privacy_re !== false;
       document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
       document.getElementById('privacyFullMarathon').checked = data.privacy_full_marathon !== false;
       document.getElementById('privacyHalfMarathon').checked = data.privacy_half_marathon !== false;
@@ -213,7 +205,6 @@
         comment: document.getElementById('comment').value,
         privacy_distance: document.getElementById('privacyDistance').checked,
         privacy_heartrate: document.getElementById('privacyHeartrate').checked,
-        privacy_re: document.getElementById('privacyRe').checked,
         privacy_detail: document.getElementById('privacyDetail').checked,
         privacy_full_marathon: document.getElementById('privacyFullMarathon').checked,
         privacy_half_marathon: document.getElementById('privacyHalfMarathon').checked,

@@ -202,7 +202,7 @@ function renderRanking() {
     const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '<span class="private">非公開</span>';
-    const re = u.privacy_re !== false ? (row.relative_effort ?? 0) : '<span class="private">非公開</span>';
+    const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '<span class="private">非公開</span>';
     const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '<span class="private">非公開</span>';
     const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '<span class="private">非公開</span>';
     const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '<span class="private">非公開</span>';
@@ -242,6 +242,8 @@ function renderRanking() {
 }
 
 // 詳細モーダル
+// 心拍データ（心拍負荷の数値＋ゾーン色分け）の公開可否。openDetailでユーザーごとに設定
+let detailHrPublic = true;
 function renderDetailSummary(user, stats) {
   const cur = stats.find(s => s.year_month === currentYearMonth) || {};
   const teamKey = (user.team || '').replace('.', '').replace('元リバティー', 'liberty');
@@ -255,7 +257,7 @@ function renderDetailSummary(user, stats) {
       ${g('自転車', (cur.ride_distance_km || 0).toFixed(1) + 'km')}
       ${g('水泳', (cur.swim_distance_m || 0) + 'm')}
       ${g('獲得標高', (cur.elevation_gain_m || 0) + 'm')}
-      ${g('心拍負荷', cur.relative_effort || 0)}
+      ${user.privacy_heartrate !== false ? g('心拍負荷', cur.relative_effort || 0) : g('心拍負荷', '非公開')}
       ${g('フルベスト', user.full_marathon_best || '-')}
       ${g('ハーフベスト', user.half_marathon_best || '-')}
     </div>
@@ -270,6 +272,7 @@ async function openDetail(userId) {
     if (!res.ok) return;
     const { user, stats } = await res.json();
 
+    detailHrPublic = user.privacy_heartrate !== false;
     document.getElementById('modalTitle').textContent = user.nickname;
     renderDetailSummary(user, stats);
     showDetailChart(stats, 'run');
@@ -329,7 +332,7 @@ function showDetailChart(stats, type) {
       else if (type === 'ride') z = [s.ride_hr_z1_percent, s.ride_hr_z2_percent, s.ride_hr_z3_percent, s.ride_hr_z4_percent, s.ride_hr_z5_percent];
       else if (type === 'swim') z = [s.swim_hr_z1_percent, s.swim_hr_z2_percent, s.swim_hr_z3_percent, s.swim_hr_z4_percent, s.swim_hr_z5_percent];
     }
-    if (z && val > 0) {
+    if (detailHrPublic && z && val > 0) {
       const total = z.reduce((a, b) => a + (b || 0), 0);
       if (total > 0) {
         // 心拍ゾーンデータがある場合は色分け
