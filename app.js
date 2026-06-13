@@ -95,10 +95,18 @@ document.getElementById('nextMonth').addEventListener('click', () => {
   }
 });
 
-// ログインバナー
-if (!currentUserId) {
-  document.getElementById('loginBanner').style.display = 'flex';
+// 閲覧にもStrava接続を必須にする。未接続ならランキング・掲示板を隠し、接続案内だけ表示
+function applyAuthGate() {
+  const loggedIn = !!currentUserId;
+  const tableWrap = document.querySelector('.table-wrapper');
+  const chatSection = document.querySelector('.chat-section');
+  const banner = document.getElementById('loginBanner');
+  if (tableWrap) tableWrap.style.display = loggedIn ? '' : 'none';
+  if (chatSection) chatSection.style.display = loggedIn ? '' : 'none';
+  if (banner) banner.style.display = loggedIn ? 'none' : 'flex';
+  return loggedIn;
 }
+applyAuthGate();
 
 document.getElementById('loginBtn').addEventListener('click', () => {
   window.location.href = `${API_BASE}/auth/strava`;
@@ -669,6 +677,8 @@ async function loadRateLimit() {
 
 // 初期化
 updateMonthDisplay();
-loadRanking();
+if (currentUserId) {
+  loadRanking();
+}
 loadRateLimit();
 setInterval(loadRateLimit, 60000);
