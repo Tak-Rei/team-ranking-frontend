@@ -38,8 +38,8 @@
   </header>
 
   <div id="loginBanner" class="login-banner" style="display:none">
-    <span>Stravaでログインしてランキングに参加しよう！</span>
-    <button id="loginBtn">Stravaでログイン</button>
+    <span>ランキングに参加しよう！</span>
+    <button id="loginBtn" class="strava-connect-btn" aria-label="Connect with Strava"><img src="img/btn_strava_connect_with_orange.svg" alt="Connect with Strava"></button>
   </div>
 
   <div class="table-wrapper">
@@ -105,6 +105,10 @@
       <div id="detailChart" class="chart-container"></div>
     </div>
   </div>
+
+  <footer class="strava-attribution">
+    <img src="img/api_logo_pwrdBy_strava_horiz_light.png" alt="Powered by Strava">
+  </footer>
 
   <div id="rateLimitIndicator" class="rate-limit-indicator" title="Strava APIの本日の使用回数（目安）"></div>
 

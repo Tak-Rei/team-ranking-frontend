@@ -103,6 +103,21 @@ header h1 {
   font-size: 0.9rem;
 }
 
+/* Strava公式「Connect with Strava」ボタン（改変禁止のため画像をそのまま使用） */
+.strava-connect-btn,
+.login-banner .strava-connect-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+}
+.strava-connect-btn img { height: 48px; display: block; }
+
+/* Powered by Strava 表記（データ表示ページに必須） */
+.strava-attribution { display: flex; justify-content: center; padding: 20px 0 70px; }
+.strava-attribution img { height: 24px; opacity: 0.85; }
+
 .table-wrapper {
   overflow-x: auto;
   padding: 0;
