@@ -69,6 +69,7 @@ header h1 {
   cursor: pointer;
   font-size: 0.8rem;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .filter-btn:hover { border-color: #fc4c02; color: #fc4c02; }
@@ -180,6 +181,7 @@ tbody td {
   cursor: pointer;
   color: #fc4c02;
   font-weight: 600;
+  white-space: nowrap;
 }
 .nickname:hover { text-decoration: underline; }
 
