@@ -144,6 +144,12 @@
       <p style="font-size:0.8rem;color:#666;margin-bottom:12px">Stravaから走行データと心拍ゾーンを再取得します。心拍ゾーンの色分けは直近の月から順番に反映されます（一度に約4ヶ月分）。色がまだ付いていない月がある場合は、時間を置いて数回押してください。</p>
       <button type="button" class="save-btn" id="resyncBtn" style="background:#444">Stravaデータを再取得</button>
     </div>
+
+    <div id="logoutSection" style="display:none;margin-top:28px">
+      <p class="section-title">アカウント</p>
+      <button type="button" class="logout-btn" id="logoutBtn">ログアウト</button>
+      <p style="font-size:0.75rem;color:#666;margin-top:8px">ログイン画面（Connect with Stravaボタン）を確認したいときに使います。合言葉の再入力は不要です。</p>
+    </div>
   </div>
 
   <script>
@@ -171,6 +177,7 @@
       const data = await res.json();
       document.getElementById('settingsForm').style.display = 'block';
       document.getElementById('resyncSection').style.display = 'block';
+      document.getElementById('logoutSection').style.display = 'block';
       document.getElementById('nickname').value = data.nickname || '';
       document.getElementById('displayStravaName').checked = !!data.display_strava_name;
       document.getElementById('team').value = data.team || '';
@@ -257,6 +264,17 @@
         }
         resyncBtn.disabled = false;
         resyncBtn.textContent = 'Stravaデータを再取得';
+      });
+    }
+
+    // ログアウト（ログイン状態だけ解除。合言葉は保持）
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        if (!confirm('ログアウトしますか？（合言葉の再入力は不要です）')) return;
+        localStorage.removeItem('userId');
+        localStorage.removeItem('admin_secret');
+        window.location.href = 'index.html';
       });
     }
   </script>
