@@ -409,19 +409,20 @@ function renderMsgItem(m) {
   </div>`;
 }
 
-// リアクションバー（4種の絵文字ボタン。押した人がいれば数と名前を表示）
+// リアクションバー。既に押された絵文字だけ数と名前を表示。
+// 「＋」を押すと選択肢（ピッカー）が現れる（最初は隠れている）。
 function renderReactions(m) {
   const rx = Array.isArray(m.reactions) ? m.reactions : [];
-  const pills = REACTION_EMOJIS.map(emoji => {
+  const existing = REACTION_EMOJIS.filter(emoji => rx.some(r => r.emoji === emoji)).map(emoji => {
     const who = rx.filter(r => r.emoji === emoji);
-    const count = who.length;
     const mine = currentUserId && who.some(r => String(r.user_id) === String(currentUserId));
     const names = who.map(r => r.nickname || '名無し').join('、');
-    const cls = 'react-btn' + (mine ? ' mine' : '') + (count ? '' : ' empty');
-    const title = count ? escapeHtml(names) : 'リアクション';
-    return `<button class="${cls}" data-msg="${m.id}" data-emoji="${emoji}" title="${title}">${emoji}${count ? `<span class="react-count">${count}</span>` : ''}</button>`;
+    return `<button class="react-btn${mine ? ' mine' : ''}" data-msg="${m.id}" data-emoji="${emoji}" title="${escapeHtml(names)}">${emoji}<span class="react-count">${who.length}</span></button>`;
   }).join('');
-  return `<div class="reaction-bar">${pills}</div>`;
+  const picker = REACTION_EMOJIS.map(emoji =>
+    `<button class="react-btn" data-msg="${m.id}" data-emoji="${emoji}" title="リアクション">${emoji}</button>`
+  ).join('');
+  return `<div class="reaction-bar">${existing}<button class="react-add" title="リアクションを追加">＋</button><div class="react-picker" style="display:none">${picker}</div></div>`;
 }
 
 // 投票1件のHTML
@@ -507,6 +508,13 @@ function attachBoardHandlers(root) {
         });
         if (res.ok) loadChat();
       } catch (e) {}
+    });
+  });
+  // リアクションの「＋」を押すと選択肢を表示
+  root.querySelectorAll('.react-add').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const picker = btn.parentElement.querySelector('.react-picker');
+      if (picker) picker.style.display = picker.style.display === 'none' ? 'flex' : 'none';
     });
   });
   // リアクション
