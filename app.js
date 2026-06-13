@@ -39,6 +39,10 @@ let sortCol = 'run_distance_km';
 let sortAsc = false;
 let currentTeamFilter = 'all';
 const isAdmin = !!localStorage.getItem('admin_secret');
+// 掲示板データのキャッシュ（リアクションを即時反映するため）
+let boardMsgs = [];
+let boardPolls = [];
+let currentNickname = '';
 
 // URLパラメータ処理（OAuth後のリダイレクト）
 const params = new URLSearchParams(window.location.search);
@@ -144,6 +148,8 @@ async function loadRanking() {
   try {
     const res = await fetch(`${API_BASE}/api/ranking?year_month=${currentYearMonth}`);
     allData = await res.json();
+    const me = allData.find(d => String(d.user_id) === String(currentUserId));
+    if (me && me.users && me.users.nickname) currentNickname = me.users.nickname;
     renderRanking();
   } catch (e) {
     document.getElementById('rankingBody').innerHTML = '<tr><td colspan="13" class="loading">読み込みエラー</td></tr>';
@@ -468,7 +474,6 @@ async function loadChat() {
     document.getElementById('chatLoginNote').style.display = 'block';
     if (pollBtn) pollBtn.style.display = 'none';
   }
-  const chatMessagesEl = document.getElementById('chatMessages');
   try {
     const [msgsRes, pollsRes] = await Promise.all([
       fetch(`${API_BASE}/api/chat?year_month=${currentYearMonth}`),
@@ -476,19 +481,27 @@ async function loadChat() {
     ]);
     const msgs = await msgsRes.json();
     const polls = pollsRes && pollsRes.ok ? await pollsRes.json() : [];
-    const items = [];
-    (Array.isArray(msgs) ? msgs : []).forEach(m => items.push({ t: tsMs(m.created_at), html: renderMsgItem(m) }));
-    (Array.isArray(polls) ? polls : []).forEach(p => items.push({ t: tsMs(p.created_at), html: renderPollItem(p) }));
-    if (items.length === 0) {
-      chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
-      return;
-    }
-    items.sort((a, b) => a.t - b.t);
-    chatMessagesEl.innerHTML = items.map(it => it.html).join('');
-    attachBoardHandlers(chatMessagesEl);
+    boardMsgs = Array.isArray(msgs) ? msgs : [];
+    boardPolls = Array.isArray(polls) ? polls : [];
+    renderBoard();
   } catch (e) {
-    chatMessagesEl.innerHTML = '<p class="chat-empty">読み込みエラー</p>';
+    document.getElementById('chatMessages').innerHTML = '<p class="chat-empty">読み込みエラー</p>';
   }
+}
+
+// キャッシュ済みのデータから掲示板を描画（リアクションの即時反映に使う）
+function renderBoard() {
+  const chatMessagesEl = document.getElementById('chatMessages');
+  const items = [];
+  boardMsgs.forEach(m => items.push({ t: tsMs(m.created_at), html: renderMsgItem(m) }));
+  boardPolls.forEach(p => items.push({ t: tsMs(p.created_at), html: renderPollItem(p) }));
+  if (items.length === 0) {
+    chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
+    return;
+  }
+  items.sort((a, b) => a.t - b.t);
+  chatMessagesEl.innerHTML = items.map(it => it.html).join('');
+  attachBoardHandlers(chatMessagesEl);
 }
 
 // 掲示板内のボタン（削除・リアクション・投票）のイベントを設定
@@ -517,17 +530,23 @@ function attachBoardHandlers(root) {
       if (picker) picker.style.display = picker.style.display === 'none' ? 'flex' : 'none';
     });
   });
-  // リアクション
+  // リアクション（画面を即時更新し、サーバーへは裏で送信）
   root.querySelectorAll('.react-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       if (!currentUserId) { alert('リアクションするにはStravaでログインしてください'); return; }
-      try {
-        const res = await fetch(`${API_BASE}/api/chat/${btn.dataset.msg}/react`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: currentUserId, emoji: btn.dataset.emoji })
-        });
-        if (res.ok) loadChat();
-      } catch (e) {}
+      const msgId = btn.dataset.msg, emoji = btn.dataset.emoji;
+      const m = boardMsgs.find(x => String(x.id) === String(msgId));
+      if (m) {
+        m.reactions = m.reactions || [];
+        const i = m.reactions.findIndex(r => r.emoji === emoji && String(r.user_id) === String(currentUserId));
+        if (i >= 0) m.reactions.splice(i, 1);
+        else m.reactions.push({ emoji, user_id: String(currentUserId), nickname: currentNickname || '自分' });
+        renderBoard(); // 即時反映（サーバーの応答を待たない）
+      }
+      fetch(`${API_BASE}/api/chat/${msgId}/react`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUserId, emoji })
+      }).then(res => { if (!res.ok) loadChat(); }).catch(() => loadChat());
     });
   });
   // 投票（タップで投票・長押し/右クリックで投票者表示）
