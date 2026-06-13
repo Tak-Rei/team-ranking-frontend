@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取得する情報とプライバシー - メンバー別走行距離</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .privacy-page { max-width: 640px; margin: 32px auto; padding: 0 18px 80px; line-height: 1.7; }
+    .privacy-page h2 { color: #fc4c02; margin-bottom: 8px; }
+    .privacy-page h3 { color: #e0e0e0; margin: 26px 0 8px; font-size: 1.05rem; border-left: 3px solid #fc4c02; padding-left: 10px; }
+    .privacy-page p, .privacy-page li { color: #cfcfcf; font-size: 0.92rem; }
+    .privacy-page ul { margin: 6px 0 6px 20px; }
+    .privacy-page li { margin: 4px 0; }
+    .privacy-page .good { color: #7df5a0; font-weight: 600; }
+    .privacy-page .bad { color: #f5b27d; font-weight: 600; }
+    .privacy-page .box { background: #161616; border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; margin: 12px 0; }
+    .privacy-page a { color: #fc4c02; }
+    .privacy-page .updated { color: #777; font-size: 0.8rem; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="privacy-page">
+    <button class="back-btn" onclick="history.back()">← 戻る</button>
+    <h2>取得する情報とプライバシーについて</h2>
+    <p class="updated">最終更新: 2026年6月</p>
+
+    <h3>このアプリが取得・保存する情報</h3>
+    <div class="box">
+      <p>Stravaに接続すると、以下の情報だけを取得して集計に使います。</p>
+      <ul>
+        <li><b>走行距離</b>（ランニング・自転車・水泳）</li>
+        <li><b>獲得標高</b></li>
+        <li><b>心拍数</b>（各ゾーンの滞在割合の計算に使用）</li>
+        <li><b>プロフィール名</b>（表示は任意でON/OFF可）</li>
+      </ul>
+      <p>このほか、あなた自身が入力した <b>ニックネーム・チーム・マラソンベスト・コメント</b> を保存します。</p>
+    </div>
+
+    <h3>取得・保存しない情報</h3>
+    <div class="box">
+      <p class="bad">位置情報は取得も保存もしません。</p>
+      <ul>
+        <li>GPSの座標・走ったルート・地図</li>
+        <li>自宅やスタート地点などの場所</li>
+        <li>市区町村などの位置ラベル</li>
+      </ul>
+      <p>心拍データは「心拍数だけ」を指定して取得しており、GPSの位置データは取りに行きません。さらにサーバー側で、Stravaから届いた位置情報は<span class="good">受け取った直後に破棄</span>しています（保存も画面表示もしません）。</p>
+    </div>
+
+    <h3>情報の使い方・公開範囲</h3>
+    <p>取得した情報は「チームの月間ランキング」を作るためだけに使います。各メンバーは設定画面の<b>プライバシースイッチ</b>で、距離・心拍データ・詳細グラフ・マラソンベストなどを<b>自分で「公開／非公開」</b>に切り替えられます。非公開にした項目は他のメンバーには表示されません。</p>
+
+    <h3>情報の保管とセキュリティ</h3>
+    <p>データはアクセス制限のかかったサーバー（データベース）に保管しています。アプリの利用には合言葉が必要で、関係者以外は閲覧できません。Stravaとの接続用キー（トークン）は、あなたの新しい記録を自動で反映するために保管しています。</p>
+
+    <h3>連携の解除（いつでも取り消せます）</h3>
+    <p>Stravaとの連携はいつでも解除できます。</p>
+    <ul>
+      <li>Strava側で解除: <a href="https://www.strava.com/settings/apps" target="_blank" rel="noopener">strava.com/settings/apps</a> から、このアプリの「取り消し（Revoke Access）」を押す</li>
+      <li>解除すると、それ以降このアプリはあなたのStravaデータにアクセスできなくなります</li>
+    </ul>
+    <p>あなたの記録の削除を希望する場合は、管理者にご連絡ください。</p>
+
+    <h3>開発・透明性について</h3>
+    <p>このアプリはチーム内で使うために個人で開発・運用しています。位置情報を使わない方針で作っていますが、Stravaの接続では仕組み上「活動データを読む」権限を許可することになります。安心して使っていただくため、上記のとおり位置情報は受け取り次第破棄する設計にしています。不安な点や要望があれば、いつでも管理者にお知らせください。</p>
+  </div>
+</body>
+</html>

@@ -115,8 +115,23 @@ header h1 {
 .strava-connect-btn img { height: 48px; display: block; }
 
 /* Powered by Strava 表記（データ表示ページに必須） */
-.strava-attribution { display: flex; justify-content: center; padding: 20px 0 70px; }
+.strava-attribution { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 0 70px; }
 .strava-attribution img { height: 24px; opacity: 0.85; }
+.privacy-footer-link { color: #888; font-size: 0.75rem; text-decoration: none; }
+.privacy-footer-link:hover { color: #fc4c02; }
+
+/* 接続前に取得情報を提示する注意書き */
+.privacy-note {
+  width: 100%;
+  font-size: 0.8rem;
+  color: #b9d4c6;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+.privacy-note.privacy-note-dark { color: #999; margin-top: 14px; max-width: 420px; }
+.privacy-note b { color: #e6f3ec; }
+.privacy-note.privacy-note-dark b { color: #ccc; }
+.privacy-note a { color: #fc4c02; white-space: nowrap; }
 
 .table-wrapper {
   overflow-x: auto;
