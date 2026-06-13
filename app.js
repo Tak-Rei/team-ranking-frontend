@@ -287,6 +287,15 @@ async function openDetail(userId) {
 
 const ZONE_COLORS = ['#2563eb', '#0ea5e9', '#22c55e', '#f97316', '#ef4444'];
 
+// チーム名の文字色（掲示板の投稿者名の横に表示する際に使用。CSSのteam-badgeと同じ色）
+const TEAM_COLORS = {
+  '3SHINE': '#f5e07d',
+  'SKY3.5': '#7de0f5',
+  'Be4': '#f57db5',
+  '元リバティー': '#f5c07d',
+  'リバティースタッフ': '#d4f57d'
+};
+
 function showDetailChart(stats, type) {
   const container = document.getElementById('detailChart');
   const tooltip = document.getElementById('chartTooltip');
@@ -384,13 +393,16 @@ async function loadChat() {
     }
     chatMessagesEl.innerHTML = msgs.map(m => {
       const name = m.users?.nickname || '名無し';
+      const team = m.users?.team || '';
+      const teamColor = TEAM_COLORS[team] || '#888';
+      const teamHtml = team ? `<span class="chat-team" style="color:${teamColor}">${escapeHtml(team)}</span>` : '';
       // created_atはUTC（タイムゾーン指示子なし）なのでZを付けてローカル時刻に変換
       const iso = (m.created_at.endsWith('Z') || m.created_at.includes('+')) ? m.created_at : m.created_at + 'Z';
       const dt = new Date(iso);
       const dateStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
       const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
       return `<div class="chat-msg">
-        <div class="chat-msg-head"><span class="chat-name">${escapeHtml(name)}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
+        <div class="chat-msg-head"><span class="chat-left"><span class="chat-name">${escapeHtml(name)}</span>${teamHtml}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
         <div class="chat-msg-body">${escapeHtml(m.message)}</div>
       </div>`;
     }).join('');
@@ -433,6 +445,21 @@ document.getElementById('chatSend').addEventListener('click', async () => {
   btn.disabled = false;
 });
 
+// Strava APIレート制限の使用状況（目安）を右下に表示
+async function loadRateLimit() {
+  const el = document.getElementById('rateLimitIndicator');
+  if (!el) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/rate-limit`);
+    if (!res.ok) return;
+    const d = await res.json();
+    if (d.overallUsage == null) { el.textContent = ''; return; }
+    el.textContent = `Strava API 本日 ${d.overallUsage} / ${d.overallLimit ?? 4000}`;
+  } catch (e) {}
+}
+
 // 初期化
 updateMonthDisplay();
 loadRanking();
+loadRateLimit();
+setInterval(loadRateLimit, 60000);
