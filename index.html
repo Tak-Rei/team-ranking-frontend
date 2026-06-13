@@ -74,6 +74,19 @@
       <input type="text" id="chatText" maxlength="300" placeholder="コメントを書く（今月もよろしく！など）">
       <button id="chatSend">送信</button>
     </div>
+    <button id="pollCreateBtn" class="poll-create-btn" style="display:none">📊 投票を作成</button>
+    <div id="pollForm" class="poll-form" style="display:none">
+      <input type="text" id="pollQuestion" maxlength="120" placeholder="質問（例: 次の合同練習どこにする？）">
+      <div id="pollOptions">
+        <input type="text" class="poll-opt-input" maxlength="60" placeholder="選択肢1">
+        <input type="text" class="poll-opt-input" maxlength="60" placeholder="選択肢2">
+      </div>
+      <div class="poll-form-actions">
+        <button id="pollAddOpt" type="button" class="poll-sub-btn">＋選択肢を追加</button>
+        <button id="pollSubmit" type="button">投票を投稿</button>
+        <button id="pollCancel" type="button" class="poll-sub-btn">キャンセル</button>
+      </div>
+    </div>
     <p id="chatLoginNote" class="chat-login-note" style="display:none">投稿するにはStravaでログインしてください</p>
   </div>
 

@@ -299,6 +299,9 @@ const TEAM_COLORS = {
   'リバティースタッフ': '#d4f57d'
 };
 
+// 掲示板のリアクション絵文字（👍確認/いいね 👏すごい 🔥熱い ❤️感動）
+const REACTION_EMOJIS = ['👍', '👏', '🔥', '❤️'];
+
 function showDetailChart(stats, type) {
   const container = document.getElementById('detailChart');
   const tooltip = document.getElementById('chartTooltip');
@@ -376,56 +379,177 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// 日時文字列をローカル時刻表示に変換（chatはtz指示子なしUTC、pollsはtimestamptz）
+function fmtDateTime(s) {
+  const iso = (s.endsWith('Z') || s.includes('+')) ? s : s + 'Z';
+  const dt = new Date(iso);
+  return `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+}
+function tsMs(s) {
+  if (!s) return 0;
+  const iso = (s.endsWith('Z') || s.includes('+')) ? s : s + 'Z';
+  return new Date(iso).getTime();
+}
+function teamTag(team) {
+  if (!team) return '';
+  const color = TEAM_COLORS[team] || '#888';
+  return `<span class="chat-team" style="color:${color}">${escapeHtml(team)}</span>`;
+}
+
+// コメント1件のHTML（リアクション付き）
+function renderMsgItem(m) {
+  const name = m.users?.nickname || '名無し';
+  const teamHtml = teamTag(m.users?.team || '');
+  const dateStr = fmtDateTime(m.created_at);
+  const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
+  return `<div class="chat-msg">
+    <div class="chat-msg-head"><span class="chat-left"><span class="chat-name">${escapeHtml(name)}</span>${teamHtml}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
+    <div class="chat-msg-body">${escapeHtml(m.message)}</div>
+    ${renderReactions(m)}
+  </div>`;
+}
+
+// リアクションバー（4種の絵文字ボタン。押した人がいれば数と名前を表示）
+function renderReactions(m) {
+  const rx = Array.isArray(m.reactions) ? m.reactions : [];
+  const pills = REACTION_EMOJIS.map(emoji => {
+    const who = rx.filter(r => r.emoji === emoji);
+    const count = who.length;
+    const mine = currentUserId && who.some(r => String(r.user_id) === String(currentUserId));
+    const names = who.map(r => r.nickname || '名無し').join('、');
+    const cls = 'react-btn' + (mine ? ' mine' : '') + (count ? '' : ' empty');
+    const title = count ? escapeHtml(names) : 'リアクション';
+    return `<button class="${cls}" data-msg="${m.id}" data-emoji="${emoji}" title="${title}">${emoji}${count ? `<span class="react-count">${count}</span>` : ''}</button>`;
+  }).join('');
+  return `<div class="reaction-bar">${pills}</div>`;
+}
+
+// 投票1件のHTML
+function renderPollItem(p) {
+  const name = p.nickname || '名無し';
+  const teamHtml = teamTag(p.team || '');
+  const dateStr = fmtDateTime(p.created_at);
+  const delBtn = ((currentUserId && String(p.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del poll-del" data-id="${p.id}">削除</button>` : '';
+  const votes = Array.isArray(p.votes) ? p.votes : [];
+  const total = votes.length;
+  const myVote = currentUserId ? votes.find(v => String(v.user_id) === String(currentUserId)) : null;
+  const opts = (p.options || []).map((opt, i) => {
+    const voters = votes.filter(v => v.option_index === i);
+    const count = voters.length;
+    const pct = total ? Math.round(count / total * 100) : 0;
+    const voted = myVote && myVote.option_index === i;
+    const voterNames = voters.map(v => v.nickname || '名無し').join('、');
+    return `<div class="poll-opt${voted ? ' voted' : ''}" data-poll="${p.id}" data-idx="${i}">
+      <div class="poll-opt-fill" style="width:${pct}%"></div>
+      <span class="poll-opt-label">${escapeHtml(opt)}</span>
+      <span class="poll-opt-count">${count}票・${pct}%</span>
+      <div class="poll-voters" data-voters="${escapeHtml(voterNames)}"></div>
+    </div>`;
+  }).join('');
+  return `<div class="chat-msg poll-msg">
+    <div class="chat-msg-head"><span class="chat-left"><span class="chat-name">${escapeHtml(name)}</span>${teamHtml}<span class="poll-tag">📊投票</span></span><span class="chat-time">${dateStr}${delBtn}</span></div>
+    <div class="poll-question">${escapeHtml(p.question)}</div>
+    <div class="poll-options">${opts}</div>
+    <div class="poll-hint">タップで投票／長押し・右クリックで投票者を表示（合計${total}票）</div>
+  </div>`;
+}
+
 async function loadChat() {
   const [y, mo] = currentYearMonth.split('-');
   document.getElementById('chatTitle').textContent = `💬 ${y}年${parseInt(mo)}月の掲示板`;
+  const pollBtn = document.getElementById('pollCreateBtn');
   if (currentUserId) {
     document.getElementById('chatInputRow').style.display = 'flex';
     document.getElementById('chatLoginNote').style.display = 'none';
+    if (pollBtn) pollBtn.style.display = 'inline-block';
   } else {
     document.getElementById('chatInputRow').style.display = 'none';
     document.getElementById('chatLoginNote').style.display = 'block';
+    if (pollBtn) pollBtn.style.display = 'none';
   }
   const chatMessagesEl = document.getElementById('chatMessages');
   try {
-    const res = await fetch(`${API_BASE}/api/chat?year_month=${currentYearMonth}`);
-    const msgs = await res.json();
-    if (!Array.isArray(msgs) || msgs.length === 0) {
+    const [msgsRes, pollsRes] = await Promise.all([
+      fetch(`${API_BASE}/api/chat?year_month=${currentYearMonth}`),
+      fetch(`${API_BASE}/api/polls?year_month=${currentYearMonth}`).catch(() => null)
+    ]);
+    const msgs = await msgsRes.json();
+    const polls = pollsRes && pollsRes.ok ? await pollsRes.json() : [];
+    const items = [];
+    (Array.isArray(msgs) ? msgs : []).forEach(m => items.push({ t: tsMs(m.created_at), html: renderMsgItem(m) }));
+    (Array.isArray(polls) ? polls : []).forEach(p => items.push({ t: tsMs(p.created_at), html: renderPollItem(p) }));
+    if (items.length === 0) {
       chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
       return;
     }
-    chatMessagesEl.innerHTML = msgs.map(m => {
-      const name = m.users?.nickname || '名無し';
-      const team = m.users?.team || '';
-      const teamColor = TEAM_COLORS[team] || '#888';
-      const teamHtml = team ? `<span class="chat-team" style="color:${teamColor}">${escapeHtml(team)}</span>` : '';
-      // created_atはUTC（タイムゾーン指示子なし）なのでZを付けてローカル時刻に変換
-      const iso = (m.created_at.endsWith('Z') || m.created_at.includes('+')) ? m.created_at : m.created_at + 'Z';
-      const dt = new Date(iso);
-      const dateStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
-      const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
-      return `<div class="chat-msg">
-        <div class="chat-msg-head"><span class="chat-left"><span class="chat-name">${escapeHtml(name)}</span>${teamHtml}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
-        <div class="chat-msg-body">${escapeHtml(m.message)}</div>
-      </div>`;
-    }).join('');
-    // 削除ボタン（本人の投稿のみ）
-    chatMessagesEl.querySelectorAll('.chat-del').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (!confirm('この投稿を削除しますか？')) return;
-        try {
-          const res = await fetch(`${API_BASE}/api/chat/${btn.dataset.id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: currentUserId, admin_secret: localStorage.getItem('admin_secret') })
-          });
-          if (res.ok) loadChat();
-        } catch (e) {}
-      });
-    });
+    items.sort((a, b) => a.t - b.t);
+    chatMessagesEl.innerHTML = items.map(it => it.html).join('');
+    attachBoardHandlers(chatMessagesEl);
   } catch (e) {
     chatMessagesEl.innerHTML = '<p class="chat-empty">読み込みエラー</p>';
   }
+}
+
+// 掲示板内のボタン（削除・リアクション・投票）のイベントを設定
+function attachBoardHandlers(root) {
+  // 削除（コメント／投票）
+  root.querySelectorAll('.chat-del').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const isPoll = btn.classList.contains('poll-del');
+      if (!confirm(isPoll ? 'この投票を削除しますか？' : 'この投稿を削除しますか？')) return;
+      const url = isPoll ? `${API_BASE}/api/polls/${btn.dataset.id}` : `${API_BASE}/api/chat/${btn.dataset.id}`;
+      try {
+        const res = await fetch(url, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUserId, admin_secret: localStorage.getItem('admin_secret') })
+        });
+        if (res.ok) loadChat();
+      } catch (e) {}
+    });
+  });
+  // リアクション
+  root.querySelectorAll('.react-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!currentUserId) { alert('リアクションするにはStravaでログインしてください'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/api/chat/${btn.dataset.msg}/react`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUserId, emoji: btn.dataset.emoji })
+        });
+        if (res.ok) loadChat();
+      } catch (e) {}
+    });
+  });
+  // 投票（タップで投票・長押し/右クリックで投票者表示）
+  root.querySelectorAll('.poll-opt').forEach(opt => {
+    let longPressed = false;
+    const reveal = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const el = opt.querySelector('.poll-voters');
+      if (!el) return;
+      const names = el.dataset.voters || '';
+      el.textContent = names ? '投票者: ' + names : '投票者なし';
+      el.classList.toggle('show');
+    };
+    opt.addEventListener('click', async () => {
+      if (longPressed) { longPressed = false; return; } // 長押し直後のクリックは投票しない
+      if (!currentUserId) { alert('投票するにはStravaでログインしてください'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/api/polls/${opt.dataset.poll}/vote`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUserId, option_index: Number(opt.dataset.idx) })
+        });
+        if (res.ok) loadChat();
+      } catch (e) {}
+    });
+    opt.addEventListener('contextmenu', reveal);
+    let pressTimer = null;
+    opt.addEventListener('touchstart', () => { longPressed = false; pressTimer = setTimeout(() => { longPressed = true; reveal(); }, 500); }, { passive: true });
+    opt.addEventListener('touchend', () => { if (pressTimer) clearTimeout(pressTimer); });
+    opt.addEventListener('touchmove', () => { if (pressTimer) clearTimeout(pressTimer); });
+  });
 }
 
 document.getElementById('chatSend').addEventListener('click', async () => {
@@ -447,6 +571,61 @@ document.getElementById('chatSend').addEventListener('click', async () => {
   } catch (e) {}
   btn.disabled = false;
 });
+
+// ===== 投票作成フォーム =====
+const pollCreateBtn = document.getElementById('pollCreateBtn');
+const pollForm = document.getElementById('pollForm');
+const pollOptionsTpl = '<input type="text" class="poll-opt-input" maxlength="60" placeholder="選択肢1"><input type="text" class="poll-opt-input" maxlength="60" placeholder="選択肢2">';
+if (pollCreateBtn && pollForm) {
+  pollCreateBtn.addEventListener('click', () => {
+    pollForm.style.display = pollForm.style.display === 'none' ? 'block' : 'none';
+  });
+}
+const pollAddOpt = document.getElementById('pollAddOpt');
+if (pollAddOpt) {
+  pollAddOpt.addEventListener('click', () => {
+    const opts = document.getElementById('pollOptions');
+    const n = opts.querySelectorAll('.poll-opt-input').length;
+    if (n >= 6) { alert('選択肢は最大6つまでです'); return; }
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.className = 'poll-opt-input'; inp.maxLength = 60; inp.placeholder = `選択肢${n + 1}`;
+    opts.appendChild(inp);
+  });
+}
+const pollCancel = document.getElementById('pollCancel');
+if (pollCancel) {
+  pollCancel.addEventListener('click', () => {
+    pollForm.style.display = 'none';
+    document.getElementById('pollQuestion').value = '';
+    document.getElementById('pollOptions').innerHTML = pollOptionsTpl;
+  });
+}
+const pollSubmit = document.getElementById('pollSubmit');
+if (pollSubmit) {
+  pollSubmit.addEventListener('click', async () => {
+    if (!currentUserId) { alert('投票を作成するにはStravaでログインしてください'); return; }
+    const question = document.getElementById('pollQuestion').value.trim();
+    const options = [...document.querySelectorAll('.poll-opt-input')].map(i => i.value.trim()).filter(v => v);
+    if (!question) { alert('質問を入力してください'); return; }
+    if (options.length < 2) { alert('選択肢を2つ以上入力してください'); return; }
+    pollSubmit.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/api/polls`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUserId, year_month: currentYearMonth, question, options })
+      });
+      if (res.ok) {
+        document.getElementById('pollQuestion').value = '';
+        document.getElementById('pollOptions').innerHTML = pollOptionsTpl;
+        pollForm.style.display = 'none';
+        loadChat();
+      } else {
+        alert('投票の作成に失敗しました');
+      }
+    } catch (e) {}
+    pollSubmit.disabled = false;
+  });
+}
 
 // Strava APIレート制限の使用状況（目安）を右下に表示
 async function loadRateLimit() {

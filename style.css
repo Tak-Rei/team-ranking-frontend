@@ -460,6 +460,58 @@ tbody td {
 }
 .chat-del:hover { color: #f57d7d; }
 
+/* リアクション */
+.reaction-bar { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.react-btn {
+  background: #222; border: 1px solid #333; color: #ccc;
+  border-radius: 14px; padding: 2px 9px; font-size: 0.85rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s;
+}
+.react-btn:hover { border-color: #fc4c02; }
+.react-btn.empty { opacity: 0.4; }
+.react-btn.empty:hover { opacity: 1; }
+.react-btn.mine { background: #3a2418; border-color: #fc4c02; }
+.react-count { font-size: 0.78rem; color: #e0e0e0; font-weight: 600; }
+
+/* 投票 */
+.poll-create-btn {
+  background: #222; border: 1px solid #444; color: #ccc;
+  padding: 7px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 8px;
+}
+.poll-create-btn:hover { border-color: #fc4c02; color: #fc4c02; }
+.poll-form {
+  margin-top: 10px; background: #161616; border: 1px solid #2a2a2a; border-radius: 6px; padding: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.poll-form input {
+  background: #222; border: 1px solid #444; color: #e0e0e0; padding: 8px 10px; border-radius: 4px; font-size: 0.9rem;
+}
+.poll-form input:focus { outline: none; border-color: #fc4c02; }
+#pollOptions { display: flex; flex-direction: column; gap: 6px; }
+.poll-form-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.poll-form-actions button {
+  background: #fc4c02; border: none; color: #fff; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+}
+.poll-form-actions .poll-sub-btn { background: #333; color: #ccc; }
+.poll-form-actions .poll-sub-btn:hover { background: #444; }
+
+.poll-msg { border-color: #3a2a1a; }
+.poll-tag { font-size: 0.72rem; color: #fc4c02; margin-left: 7px; font-weight: 600; white-space: nowrap; }
+.poll-question { font-size: 0.95rem; font-weight: 600; color: #e0e0e0; margin: 6px 0 8px; white-space: pre-wrap; word-break: break-word; }
+.poll-options { display: flex; flex-direction: column; gap: 6px; }
+.poll-opt {
+  position: relative; background: #1f1f1f; border: 1px solid #333; border-radius: 5px;
+  padding: 8px 10px; cursor: pointer; overflow: hidden; user-select: none;
+}
+.poll-opt:hover { border-color: #fc4c02; }
+.poll-opt.voted { border-color: #fc4c02; }
+.poll-opt-fill { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(252,76,2,0.18); transition: width 0.3s; z-index: 0; }
+.poll-opt-label { position: relative; z-index: 1; font-size: 0.9rem; }
+.poll-opt-count { position: relative; z-index: 1; float: right; font-size: 0.8rem; color: #aaa; }
+.poll-voters { display: none; position: relative; z-index: 1; margin-top: 6px; font-size: 0.78rem; color: #f5c07d; word-break: break-word; }
+.poll-voters.show { display: block; }
+.poll-hint { font-size: 0.72rem; color: #666; margin-top: 6px; }
+
 /* スマホ対応 */
 .mobile-team { display: none; }
 
