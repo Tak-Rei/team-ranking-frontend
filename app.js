@@ -44,6 +44,108 @@ let boardMsgs = [];
 let boardPolls = [];
 let currentNickname = '';
 
+// ===== 多言語対応（日本語 / 英語） =====
+let lang = localStorage.getItem('lang') || 'ja';
+const I18N = {
+  ja: {
+    'toggle': 'EN',
+    'h1': '🏃 メンバー別走行距離',
+    'pw.title': 'メンバー別走行距離',
+    'pw.prompt': '参加するには合言葉を入力してください',
+    'pw.ph': '合言葉',
+    'pw.enter': '入る',
+    'pw.error': '合言葉が違います',
+    'banner.title': '🔒 Stravaに接続するとランキング・掲示板を閲覧できます',
+    'banner.note': '接続して取得するのは <b>走行距離・獲得標高・心拍数・プロフィール名</b> だけです。<b>位置情報（GPS・地図・場所）は取得も保存もしません。</b> <b>非公開（自分のみ）の活動は読み取りません。</b> データはあなたが設定した公開範囲でのみチームに表示されます。<a href="privacy.html">取得する情報について詳しく ›</a>',
+    'consent.title': 'ご利用前の確認',
+    'consent.intro': 'このアプリを使う前に、以下の点にご同意ください。',
+    'consent.check1': 'Stravaでフォローし合っていないメンバーにも、私の走行距離・記録（合計距離など）が表示されることを理解しました。',
+    'consent.check2': '位置情報（GPS・地図）は利用されないこと、将来利用する仕様に変更する場合は必ず改めて同意を求められることを理解しました。',
+    'consent.agree': '同意して始める',
+    'consent.detail': '取得する情報について詳しく ›',
+    'col.nickname': 'ニックネーム',
+    'col.strava': 'Stravaアカウント名',
+    'col.team': 'チーム',
+    'col.run': 'ランニング(km)',
+    'col.ride': '自転車(km)',
+    'col.swim': '水泳(m)',
+    'col.elev': '獲得標高(m)',
+    'col.load': '心拍負荷',
+    'col.full': 'フルマラソンベスト',
+    'col.half': 'ハーフマラソンベスト',
+    'col.race': '参加予定レース',
+    'col.comment': 'コメント'
+  },
+  en: {
+    'toggle': '日本語',
+    'h1': '🏃 Member Distance Ranking',
+    'pw.title': 'Member Distance Ranking',
+    'pw.prompt': 'Enter the passcode to continue',
+    'pw.ph': 'Passcode',
+    'pw.enter': 'Enter',
+    'pw.error': 'Incorrect passcode',
+    'banner.title': '🔒 Connect with Strava to view the rankings & board',
+    'banner.note': 'We only read your <b>distance, elevation gain, heart rate, and profile name</b>. <b>We never collect or store location data (GPS, maps, places).</b> <b>Private ("Only You") activities are not read.</b> Your data is shown to the team only within the visibility you choose. <a href="privacy.html">Learn what we collect ›</a>',
+    'consent.title': 'Before you start',
+    'consent.intro': 'Please agree to the following before using this app.',
+    'consent.check1': 'I understand that my running distance and records (such as total distance) will be visible to other members, even those I do not follow on Strava.',
+    'consent.check2': 'I understand that location data (GPS, maps) is not used, and that if this ever changes, my consent will be requested again.',
+    'consent.agree': 'Agree & Continue',
+    'consent.detail': 'Learn what we collect ›',
+    'col.nickname': 'Nickname',
+    'col.strava': 'Strava name',
+    'col.team': 'Team',
+    'col.run': 'Running (km)',
+    'col.ride': 'Cycling (km)',
+    'col.swim': 'Swim (m)',
+    'col.elev': 'Elevation (m)',
+    'col.load': 'HR load',
+    'col.full': 'Full PB',
+    'col.half': 'Half PB',
+    'col.race': 'Upcoming races',
+    'col.comment': 'Comment'
+  }
+};
+function t(key) {
+  if (I18N[lang] && I18N[lang][key] != null) return I18N[lang][key];
+  return I18N.ja[key] != null ? I18N.ja[key] : key;
+}
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  updateSortArrows();
+}
+
+// 言語トグル（右上）
+const langToggleBtn = document.getElementById('langToggle');
+if (langToggleBtn) {
+  langToggleBtn.addEventListener('click', () => {
+    lang = (lang === 'ja') ? 'en' : 'ja';
+    localStorage.setItem('lang', lang);
+    applyLang();
+  });
+}
+
+// 同意ゲート（初回のみ。2つのチェックで「同意」ボタンが有効化）
+if (!localStorage.getItem('consent_v1')) {
+  const cg = document.getElementById('consentGate');
+  if (cg) cg.style.display = 'flex';
+}
+{
+  const c1 = document.getElementById('consent1');
+  const c2 = document.getElementById('consent2');
+  const agree = document.getElementById('consentAgree');
+  const sync = () => { if (agree) agree.disabled = !(c1 && c1.checked && c2 && c2.checked); };
+  if (c1) c1.addEventListener('change', sync);
+  if (c2) c2.addEventListener('change', sync);
+  if (agree) agree.addEventListener('click', () => {
+    localStorage.setItem('consent_v1', '1');
+    const cg = document.getElementById('consentGate');
+    if (cg) cg.style.display = 'none';
+  });
+}
+
 // URLパラメータ処理（OAuth後のリダイレクト）
 const params = new URLSearchParams(window.location.search);
 if (params.get('auth') === 'success') {
@@ -130,7 +232,15 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// ソート
+// ソート（ラベルは翻訳、矢印は .sort-arrow に分離）
+function updateSortArrows() {
+  document.querySelectorAll('th.sortable').forEach(th => {
+    const active = th.dataset.col === sortCol;
+    th.classList.toggle('active', active);
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = active ? (sortAsc ? ' ▲' : ' ▼') : '';
+  });
+}
 document.querySelectorAll('th.sortable').forEach(th => {
   th.addEventListener('click', () => {
     const col = th.dataset.col;
@@ -140,12 +250,7 @@ document.querySelectorAll('th.sortable').forEach(th => {
       sortCol = col;
       sortAsc = false;
     }
-    document.querySelectorAll('th.sortable').forEach(t => {
-      t.classList.remove('active');
-      t.textContent = t.textContent.replace(/ [▲▼]$/, '');
-    });
-    th.classList.add('active');
-    th.textContent = th.textContent + (sortAsc ? ' ▲' : ' ▼');
+    updateSortArrows();
     renderRanking();
   });
 });
@@ -677,6 +782,7 @@ async function loadRateLimit() {
 
 // 初期化
 updateMonthDisplay();
+applyLang();
 if (currentUserId) {
   loadRanking();
 }

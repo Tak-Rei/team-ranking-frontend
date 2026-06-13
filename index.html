@@ -7,18 +7,31 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <button id="langToggle" class="lang-toggle" data-i18n="toggle">EN</button>
+
   <div id="passwordGate" class="password-gate">
     <div class="password-box">
-      <h2>メンバー別走行距離</h2>
-      <p>参加するには合言葉を入力してください</p>
-      <input type="password" id="passwordInput" placeholder="合言葉">
-      <button id="passwordSubmit">入る</button>
-      <p id="passwordError" class="password-error">合言葉が違います</p>
+      <h2 data-i18n="pw.title">メンバー別走行距離</h2>
+      <p data-i18n="pw.prompt">参加するには合言葉を入力してください</p>
+      <input type="password" id="passwordInput" data-i18n-ph="pw.ph" placeholder="合言葉">
+      <button id="passwordSubmit" data-i18n="pw.enter">入る</button>
+      <p id="passwordError" class="password-error" data-i18n="pw.error">合言葉が違います</p>
+    </div>
+  </div>
+
+  <div id="consentGate" class="consent-gate">
+    <div class="consent-box">
+      <h2 data-i18n="consent.title">ご利用前の確認</h2>
+      <p class="consent-intro" data-i18n="consent.intro">このアプリを使う前に、以下の点にご同意ください。</p>
+      <label class="consent-check"><input type="checkbox" id="consent1"><span data-i18n="consent.check1">Stravaでフォローし合っていないメンバーにも、私の走行距離・記録（合計距離など）が表示されることを理解しました。</span></label>
+      <label class="consent-check"><input type="checkbox" id="consent2"><span data-i18n="consent.check2">位置情報（GPS・地図）は利用されないこと、将来利用する仕様に変更する場合は必ず改めて同意を求められることを理解しました。</span></label>
+      <button id="consentAgree" class="consent-agree" disabled data-i18n="consent.agree">同意して始める</button>
+      <p class="consent-detail-link"><a href="privacy.html" data-i18n="consent.detail">取得する情報について詳しく</a></p>
     </div>
   </div>
 
   <header>
-    <h1>🏃 メンバー別走行距離</h1>
+    <h1 data-i18n="h1">🏃 メンバー別走行距離</h1>
     <div class="header-controls">
       <div class="month-nav">
         <button id="prevMonth">◀</button>
@@ -38,9 +51,9 @@
   </header>
 
   <div id="loginBanner" class="login-banner" style="display:none">
-    <span>🔒 Stravaに接続するとランキング・掲示板を閲覧できます</span>
+    <span data-i18n="banner.title">🔒 Stravaに接続するとランキング・掲示板を閲覧できます</span>
     <button id="loginBtn" class="strava-connect-btn" aria-label="Connect with Strava"><img src="img/btn_strava_connect_with_orange.svg" alt="Connect with Strava"></button>
-    <p class="privacy-note">接続して取得するのは <b>走行距離・獲得標高・心拍数・プロフィール名</b> だけです。<b>位置情報（GPS・地図・場所）は取得も保存もしません。</b> <b>非公開（自分のみ）の活動は読み取りません。</b> データはあなたが設定した公開範囲でのみチームに表示されます。<a href="privacy.html">取得する情報について詳しく ›</a></p>
+    <p class="privacy-note" data-i18n="banner.note">接続して取得するのは <b>走行距離・獲得標高・心拍数・プロフィール名</b> だけです。<b>位置情報（GPS・地図・場所）は取得も保存もしません。</b> <b>非公開（自分のみ）の活動は読み取りません。</b> データはあなたが設定した公開範囲でのみチームに表示されます。<a href="privacy.html">取得する情報について詳しく ›</a></p>
   </div>
 
   <div class="table-wrapper">
@@ -48,18 +61,18 @@
       <thead>
         <tr>
           <th>#</th>
-          <th class="sortable tc" data-col="nickname">ニックネーム</th>
-          <th class="sortable tc" data-col="strava_name">Stravaアカウント名</th>
-          <th class="sortable" data-col="team">チーム</th>
-          <th class="sortable num active" data-col="run_distance_km">ランニング(km) ▼</th>
-          <th class="sortable num" data-col="ride_distance_km">自転車(km)</th>
-          <th class="sortable num" data-col="swim_distance_m">水泳(m)</th>
-          <th class="sortable num" data-col="elevation_gain_m">獲得標高(m)</th>
-          <th class="sortable num" data-col="relative_effort">心拍負荷</th>
-          <th class="sortable tc" data-col="full_marathon_best">フルマラソンベスト</th>
-          <th class="sortable tc" data-col="half_marathon_best">ハーフマラソンベスト</th>
-          <th>参加予定レース</th>
-          <th>コメント</th>
+          <th class="sortable tc" data-col="nickname"><span data-i18n="col.nickname">ニックネーム</span><span class="sort-arrow"></span></th>
+          <th class="sortable tc" data-col="strava_name"><span data-i18n="col.strava">Stravaアカウント名</span><span class="sort-arrow"></span></th>
+          <th class="sortable" data-col="team"><span data-i18n="col.team">チーム</span><span class="sort-arrow"></span></th>
+          <th class="sortable num" data-col="run_distance_km"><span data-i18n="col.run">ランニング(km)</span><span class="sort-arrow"></span></th>
+          <th class="sortable num" data-col="ride_distance_km"><span data-i18n="col.ride">自転車(km)</span><span class="sort-arrow"></span></th>
+          <th class="sortable num" data-col="swim_distance_m"><span data-i18n="col.swim">水泳(m)</span><span class="sort-arrow"></span></th>
+          <th class="sortable num" data-col="elevation_gain_m"><span data-i18n="col.elev">獲得標高(m)</span><span class="sort-arrow"></span></th>
+          <th class="sortable num" data-col="relative_effort"><span data-i18n="col.load">心拍負荷</span><span class="sort-arrow"></span></th>
+          <th class="sortable tc" data-col="full_marathon_best"><span data-i18n="col.full">フルマラソンベスト</span><span class="sort-arrow"></span></th>
+          <th class="sortable tc" data-col="half_marathon_best"><span data-i18n="col.half">ハーフマラソンベスト</span><span class="sort-arrow"></span></th>
+          <th data-i18n="col.race">参加予定レース</th>
+          <th data-i18n="col.comment">コメント</th>
         </tr>
       </thead>
       <tbody id="rankingBody">

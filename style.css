@@ -626,6 +626,41 @@ tbody td {
 }
 .admin-del:hover { color: #ff3333; }
 
+/* 言語トグル（右上・固定） */
+.lang-toggle {
+  position: fixed; top: 8px; right: 10px; z-index: 250;
+  background: rgba(26, 26, 26, 0.92); border: 1px solid #555; color: #ccc;
+  padding: 4px 12px; border-radius: 14px; cursor: pointer; font-size: 0.78rem;
+}
+.lang-toggle:hover { border-color: #fc4c02; color: #fc4c02; }
+/* 言語トグルと設定ボタンが重ならないように余白を確保 */
+#settingsBtn { margin-right: 70px; }
+.lang-toggle { min-width: 58px; text-align: center; }
+
+/* 同意ゲート（初回のみ表示・接続前の同意） */
+.consent-gate {
+  display: none; position: fixed; inset: 0; background: #0f0f0f; z-index: 190;
+  align-items: center; justify-content: center; padding: 20px; overflow-y: auto;
+}
+.consent-box {
+  max-width: 460px; width: 100%; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 10px; padding: 24px;
+}
+.consent-box h2 { color: #fc4c02; margin-bottom: 10px; font-size: 1.2rem; }
+.consent-intro { color: #ccc; font-size: 0.9rem; margin-bottom: 16px; line-height: 1.6; }
+.consent-check {
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px;
+  font-size: 0.85rem; color: #ddd; line-height: 1.55; cursor: pointer;
+}
+.consent-check input { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; accent-color: #fc4c02; cursor: pointer; }
+.consent-agree {
+  width: 100%; background: #fc4c02; border: none; color: #fff;
+  padding: 12px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 4px;
+}
+.consent-agree:disabled { background: #444; color: #888; cursor: not-allowed; }
+.consent-detail-link { text-align: center; margin-top: 12px; }
+.consent-detail-link a { color: #fc4c02; font-size: 0.82rem; }
+
 /* Strava APIレート制限の目安表示（右下・控えめ） */
 .rate-limit-indicator {
   position: fixed;
