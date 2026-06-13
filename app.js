@@ -317,7 +317,9 @@ function renderRanking() {
     const rankClass = rank <= 3 ? `rank-${rank}` : '';
     const teamKey = (u.team || '').replace('.', '').replace('元リバティー', 'liberty');
     const teamBadge = u.team ? `<span class="team-badge team-${teamKey}">${u.team}</span>` : '';
-    const stravaName = u.display_strava_name ? (u.strava_name || '') : '';
+    const anon = u.privacy_anonymous === true;
+    const nick = anon ? '-' : (u.nickname || '未設定');
+    const stravaName = (u.display_strava_name && !anon) ? (u.strava_name || '') : '';
     const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '<span class="private">非公開</span>';
@@ -328,7 +330,7 @@ function renderRanking() {
 
     return `<tr>
       <td class="rank ${rankClass}">${rank}</td>
-      <td class="nickname tc" onclick="openDetail('${row.user_id}')">${u.nickname || '未設定'}<span class="mobile-team">${teamBadge}</span>${isAdmin ? `<button class="admin-del" data-uid="${row.user_id}" data-name="${escapeHtml(u.nickname || '未設定')}">×</button>` : ''}</td>
+      <td class="nickname tc" onclick="openDetail('${row.user_id}')">${escapeHtml(nick)}<span class="mobile-team">${teamBadge}</span>${isAdmin ? `<button class="admin-del" data-uid="${row.user_id}" data-name="${escapeHtml(u.nickname || '未設定')}">×</button>` : ''}</td>
       <td class="tc">${stravaName}</td>
       <td>${teamBadge}</td>
       <td class="num">${runKm}</td>
@@ -368,7 +370,7 @@ function renderDetailSummary(user, stats) {
   const teamKey = (user.team || '').replace('.', '').replace('元リバティー', 'liberty');
   const teamBadge = user.team ? `<span class="team-badge team-${teamKey}">${user.team}</span>` : '';
   const g = (label, val) => `<div><span>${label}</span><b>${val}</b></div>`;
-  const stravaName = (user.display_strava_name && user.strava_name) ? `<span style="color:#888; font-size:0.85rem; margin-left:8px;">${escapeHtml(user.strava_name)}</span>` : '';
+  const stravaName = (user.display_strava_name && user.strava_name && !user.privacy_anonymous) ? `<span style="color:#888; font-size:0.85rem; margin-left:8px;">${escapeHtml(user.strava_name)}</span>` : '';
   document.getElementById('detailSummary').innerHTML = `
     <div class="detail-meta">${teamBadge}${stravaName}</div>
     <div class="detail-grid">
@@ -392,7 +394,7 @@ async function openDetail(userId) {
     const { user, stats } = await res.json();
 
     detailHrPublic = user.privacy_heartrate !== false;
-    document.getElementById('modalTitle').textContent = user.nickname;
+    document.getElementById('modalTitle').textContent = user.privacy_anonymous ? '-' : user.nickname;
     renderDetailSummary(user, stats);
     showDetailChart(stats, 'run');
     document.getElementById('detailModal').classList.add('open');
@@ -517,7 +519,7 @@ function teamTag(team) {
 
 // コメント1件のHTML（リアクション付き）
 function renderMsgItem(m) {
-  const name = m.users?.nickname || '名無し';
+  const name = m.users?.privacy_anonymous ? '-' : (m.users?.nickname || '名無し');
   const teamHtml = teamTag(m.users?.team || '');
   const dateStr = fmtDateTime(m.created_at);
   const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';

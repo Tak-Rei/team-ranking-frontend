@@ -131,6 +131,15 @@
         </label>
       </div>
 
+      <div class="toggle-row">
+        <span class="toggle-label">個人情報を隠す（SNS共有用）</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyAnonymous">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px">ONにすると、あなたのニックネームが「-」になり、Stravaアカウント名や掲示板での名前も他のメンバーから見えなくなります。SNSへの投稿やスクリーンショットで個人情報を隠したいときに使えます（詳細ページは引き続き開けます）。</p>
+
       <p class="section-title">管理者用</p>
       <div class="form-group">
         <label>管理者キー</label>
@@ -191,6 +200,7 @@
       document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
       document.getElementById('privacyFullMarathon').checked = data.privacy_full_marathon !== false;
       document.getElementById('privacyHalfMarathon').checked = data.privacy_half_marathon !== false;
+      document.getElementById('privacyAnonymous').checked = !!data.privacy_anonymous;
       document.getElementById('hrZ2Min').value = data.hr_z2_min ?? '';
       document.getElementById('hrZ3Min').value = data.hr_z3_min ?? '';
       document.getElementById('hrZ4Min').value = data.hr_z4_min ?? '';
@@ -216,6 +226,7 @@
         privacy_detail: document.getElementById('privacyDetail').checked,
         privacy_full_marathon: document.getElementById('privacyFullMarathon').checked,
         privacy_half_marathon: document.getElementById('privacyHalfMarathon').checked,
+        privacy_anonymous: document.getElementById('privacyAnonymous').checked,
         hr_z2_min: document.getElementById('hrZ2Min').value ? Number(document.getElementById('hrZ2Min').value) : null,
         hr_z3_min: document.getElementById('hrZ3Min').value ? Number(document.getElementById('hrZ3Min').value) : null,
         hr_z4_min: document.getElementById('hrZ4Min').value ? Number(document.getElementById('hrZ4Min').value) : null,
