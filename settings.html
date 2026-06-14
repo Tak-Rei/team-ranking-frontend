@@ -174,7 +174,7 @@
 
     <div id="withdrawSection" style="display:none;margin-top:36px;border-top:1px solid #2a2a2a;padding-top:20px">
       <p class="section-title" style="color:#f57d7d" data-i18n="sec.withdraw">退会</p>
-      <p style="font-size:0.78rem;color:#888;margin-bottom:10px" data-i18n="withdraw.note">あなたに関するデータ（プロフィール・記録・投稿・リアクション・投票など）をサーバーから<b>完全に削除</b>し、<b>Stravaとの連携も自動で解除</b>します。他のメンバーのデータには影響しません。<b>元に戻せません。</b></p>
+      <p style="font-size:0.78rem;color:#888;margin-bottom:10px" data-i18n="withdraw.note">あなたに関するデータ（プロフィール・記録・投稿・リアクション・投票など）をサーバーから<b>完全に削除</b>し、<b>Stravaとの連携も自動で解除</b>します。他のメンバーのデータには影響しません。再度利用するには、もう一度Stravaと接続してデータを取得し直す必要があります。</p>
       <button type="button" class="withdraw-btn" id="withdrawBtn" data-i18n="btn.withdraw">退会して自分のデータを削除する</button>
     </div>
   </div>
@@ -237,7 +237,7 @@
       'btn.logout': 'Log out',
       'logout.note': 'Use this to check the login screen (Connect with Strava button). No passcode re-entry needed.',
       'sec.withdraw': 'Leave / delete account',
-      'withdraw.note': 'Permanently <b>delete all your data</b> (profile, records, posts, reactions, polls) from the server and <b>automatically revoke the Strava connection</b>. This does not affect other members. <b>This cannot be undone.</b>',
+      'withdraw.note': 'Permanently <b>delete all your data</b> (profile, records, posts, reactions, polls) from the server and <b>automatically revoke the Strava connection</b>. This does not affect other members. To use the app again, you’ll need to reconnect with Strava and re-fetch your data.',
       'btn.withdraw': 'Leave and delete my data'
     };
     // 動的に表示する文言（保存結果・再取得中など）
@@ -248,8 +248,8 @@
         resyncOk: '✓ データを再取得しました（心拍ゾーンは直近の月から順次反映されます）',
         resyncFail: '再取得に失敗しました。少し時間を置いて再度お試しください。',
         netErr: '通信エラーが発生しました。', logoutConfirm: 'ログアウトしますか？（合言葉の再入力は不要です）',
-        withdrawConfirm1: '退会して、あなたに関するデータをサーバーから完全に削除します。元に戻せません。続けますか？',
-        withdrawConfirm2: '本当によろしいですか？この操作は取り消せません。記録・投稿・設定がすべて削除され、Stravaとの連携も解除されます。',
+        withdrawConfirm1: '退会すると、あなたに関するデータをサーバーから完全に削除し、Stravaとの連携も解除します。続けますか？',
+        withdrawConfirm2: '最終確認です。退会してよろしいですか？（再度利用するには、もう一度Stravaと接続してデータを取得し直す必要があります）',
         withdrawDone: '退会が完了しました。データを削除し、Stravaとの連携を解除しました。',
         withdrawFail: '退会の処理に失敗しました。少し時間を置いて再度お試しください。'
       },
@@ -259,8 +259,8 @@
         resyncOk: '✓ Data re-fetched (zone colors apply from the most recent months first)',
         resyncFail: 'Re-fetch failed. Please wait a bit and try again.',
         netErr: 'A network error occurred.', logoutConfirm: 'Log out? (No passcode re-entry needed.)',
-        withdrawConfirm1: 'Leave and permanently delete all your data from the server? This cannot be undone. Continue?',
-        withdrawConfirm2: 'Are you absolutely sure? This cannot be undone. All your records, posts and settings will be deleted, and the Strava connection will be revoked.',
+        withdrawConfirm1: 'Leaving will permanently delete all your data from the server and revoke the Strava connection. Continue?',
+        withdrawConfirm2: 'Final check: leave for sure? (To use the app again, you’ll need to reconnect with Strava and re-fetch your data.)',
         withdrawDone: 'You have left. Your data was deleted and the Strava connection was revoked.',
         withdrawFail: 'Failed to process. Please wait a bit and try again.'
       }

@@ -409,6 +409,9 @@ async function openDetail(userId) {
     renderDetailSummary(user, stats, hidden);
     showDetailChart(stats, 'run');
     document.getElementById('detailModal').classList.add('open');
+    // 詳細ページでは言語トグルを隠す（スマホでバツ印と干渉するため）
+    const lt = document.getElementById('langToggle');
+    if (lt) lt.style.display = 'none';
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.onclick = () => {
@@ -504,6 +507,9 @@ function showDetailChart(stats, type) {
 
 document.getElementById('modalClose').addEventListener('click', () => {
   document.getElementById('detailModal').classList.remove('open');
+  // 詳細ページを閉じたら言語トグルを再表示
+  const lt = document.getElementById('langToggle');
+  if (lt) lt.style.display = '';
 });
 
 // ========== チャット ==========
