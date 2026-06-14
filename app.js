@@ -44,6 +44,16 @@ let boardMsgs = [];
 let boardPolls = [];
 let currentNickname = '';
 
+// SNS共有用: 名前を隠す表示モード（この端末のみ・localStorage保存・DBには保存しない）
+// hide_names=ON で全員の名前を「-」に。hide_names_self=ON なら自分だけ表示する
+let hideNames = localStorage.getItem('hide_names') === '1';
+let hideNamesSelf = localStorage.getItem('hide_names_self') === '1';
+function nameHidden(userId) {
+  if (!hideNames) return false;
+  if (hideNamesSelf && String(userId) === String(currentUserId)) return false;
+  return true;
+}
+
 // ===== 多言語対応（日本語 / 英語） =====
 let lang = localStorage.getItem('lang') || 'ja';
 const I18N = {
@@ -317,9 +327,9 @@ function renderRanking() {
     const rankClass = rank <= 3 ? `rank-${rank}` : '';
     const teamKey = (u.team || '').replace('.', '').replace('元リバティー', 'liberty');
     const teamBadge = u.team ? `<span class="team-badge team-${teamKey}">${u.team}</span>` : '';
-    const anon = u.privacy_anonymous === true;
-    const nick = anon ? '-' : (u.nickname || '未設定');
-    const stravaName = (u.display_strava_name && !anon) ? (u.strava_name || '') : '';
+    const hidden = nameHidden(row.user_id);
+    const nick = hidden ? '-' : (u.nickname || '未設定');
+    const stravaName = (u.display_strava_name && !hidden) ? (u.strava_name || '') : '';
     const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '<span class="private">非公開</span>';
@@ -365,12 +375,12 @@ function renderRanking() {
 // 詳細モーダル
 // 心拍データ（心拍負荷の数値＋ゾーン色分け）の公開可否。openDetailでユーザーごとに設定
 let detailHrPublic = true;
-function renderDetailSummary(user, stats) {
+function renderDetailSummary(user, stats, hidden) {
   const cur = stats.find(s => s.year_month === currentYearMonth) || {};
   const teamKey = (user.team || '').replace('.', '').replace('元リバティー', 'liberty');
   const teamBadge = user.team ? `<span class="team-badge team-${teamKey}">${user.team}</span>` : '';
   const g = (label, val) => `<div><span>${label}</span><b>${val}</b></div>`;
-  const stravaName = (user.display_strava_name && user.strava_name && !user.privacy_anonymous) ? `<span style="color:#888; font-size:0.85rem; margin-left:8px;">${escapeHtml(user.strava_name)}</span>` : '';
+  const stravaName = (user.display_strava_name && user.strava_name && !hidden) ? `<span style="color:#888; font-size:0.85rem; margin-left:8px;">${escapeHtml(user.strava_name)}</span>` : '';
   document.getElementById('detailSummary').innerHTML = `
     <div class="detail-meta">${teamBadge}${stravaName}</div>
     <div class="detail-grid">
@@ -394,8 +404,9 @@ async function openDetail(userId) {
     const { user, stats } = await res.json();
 
     detailHrPublic = user.privacy_heartrate !== false;
-    document.getElementById('modalTitle').textContent = user.privacy_anonymous ? '-' : user.nickname;
-    renderDetailSummary(user, stats);
+    const hidden = nameHidden(userId);
+    document.getElementById('modalTitle').textContent = hidden ? '-' : user.nickname;
+    renderDetailSummary(user, stats, hidden);
     showDetailChart(stats, 'run');
     document.getElementById('detailModal').classList.add('open');
 
@@ -519,7 +530,7 @@ function teamTag(team) {
 
 // コメント1件のHTML（リアクション付き）
 function renderMsgItem(m) {
-  const name = m.users?.privacy_anonymous ? '-' : (m.users?.nickname || '名無し');
+  const name = nameHidden(m.user_id) ? '-' : (m.users?.nickname || '名無し');
   const teamHtml = teamTag(m.users?.team || '');
   const dateStr = fmtDateTime(m.created_at);
   const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
@@ -537,7 +548,7 @@ function renderReactions(m) {
   const existing = REACTION_EMOJIS.filter(emoji => rx.some(r => r.emoji === emoji)).map(emoji => {
     const who = rx.filter(r => r.emoji === emoji);
     const mine = currentUserId && who.some(r => String(r.user_id) === String(currentUserId));
-    const names = who.map(r => r.nickname || '名無し').join('、');
+    const names = who.map(r => nameHidden(r.user_id) ? '-' : (r.nickname || '名無し')).join('、');
     return `<button class="react-btn${mine ? ' mine' : ''}" data-msg="${m.id}" data-emoji="${emoji}" title="${escapeHtml(names)}">${emoji}<span class="react-count">${who.length}</span></button>`;
   }).join('');
   const picker = REACTION_EMOJIS.map(emoji =>
@@ -548,7 +559,7 @@ function renderReactions(m) {
 
 // 投票1件のHTML
 function renderPollItem(p) {
-  const name = p.nickname || '名無し';
+  const name = nameHidden(p.user_id) ? '-' : (p.nickname || '名無し');
   const teamHtml = teamTag(p.team || '');
   const dateStr = fmtDateTime(p.created_at);
   const delBtn = ((currentUserId && String(p.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del poll-del" data-id="${p.id}">削除</button>` : '';
@@ -560,7 +571,7 @@ function renderPollItem(p) {
     const count = voters.length;
     const pct = total ? Math.round(count / total * 100) : 0;
     const voted = myVote && myVote.option_index === i;
-    const voterNames = voters.map(v => v.nickname || '名無し').join('、');
+    const voterNames = voters.map(v => nameHidden(v.user_id) ? '-' : (v.nickname || '名無し')).join('、');
     return `<div class="poll-opt${voted ? ' voted' : ''}" data-poll="${p.id}" data-idx="${i}">
       <div class="poll-opt-fill" style="width:${pct}%"></div>
       <span class="poll-opt-label">${escapeHtml(opt)}</span>

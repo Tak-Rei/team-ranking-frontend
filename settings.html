@@ -132,15 +132,6 @@
         </label>
       </div>
 
-      <div class="toggle-row">
-        <span class="toggle-label" data-i18n="tgl.anon">個人情報を隠す（SNS共有用）</span>
-        <label class="toggle">
-          <input type="checkbox" id="privacyAnonymous">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <p style="font-size:0.78rem;color:#666;margin:-2px 0 10px" data-i18n="tgl.anon.note">ONにすると、あなたのニックネームが「-」になり、Stravaアカウント名や掲示板での名前も他のメンバーから見えなくなります。SNSへの投稿やスクリーンショットで個人情報を隠したいときに使えます（詳細ページは引き続き開けます）。</p>
-
       <p class="section-title" data-i18n="sec.admin">管理者用</p>
       <div class="form-group">
         <label data-i18n="lbl.adminKey">管理者キー</label>
@@ -149,6 +140,25 @@
 
       <button type="submit" class="save-btn" data-i18n="btn.save">保存する</button>
     </form>
+
+    <div id="snsDisplaySection" style="display:none;margin-top:28px">
+      <p class="section-title" data-i18n="sec.sns">SNS共有用の表示（この端末だけ）</p>
+      <p style="font-size:0.78rem;color:#666;margin-bottom:10px" data-i18n="sns.note">SNSに載せるときに、ランキングや掲示板の<b>全員の名前</b>を隠せます。これは<b>この端末の見え方だけ</b>を変える設定で、他のメンバーや保存データには影響しません。</p>
+      <div class="toggle-row">
+        <span class="toggle-label" data-i18n="tgl.hideAll">全員の名前を隠す</span>
+        <label class="toggle">
+          <input type="checkbox" id="hideNames">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label" data-i18n="tgl.showSelf">そのとき自分の名前は表示する</span>
+        <label class="toggle">
+          <input type="checkbox" id="hideNamesSelf">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
 
     <div id="resyncSection" style="display:none;margin-top:28px">
       <p class="section-title" data-i18n="sec.refresh">データ更新</p>
@@ -207,8 +217,10 @@
       'tgl.detail': 'Show detail page',
       'tgl.full': 'Show full marathon PB',
       'tgl.half': 'Show half marathon PB',
-      'tgl.anon': 'Hide personal info (for sharing)',
-      'tgl.anon.note': 'When on, your nickname shows as “-”, and your Strava account name and your name on the board are hidden from other members. Useful for hiding personal info when posting screenshots to social media (the detail page can still be opened).',
+      'sec.sns': 'Display for sharing (this device only)',
+      'sns.note': 'When posting to social media, you can hide <b>everyone’s names</b> in the ranking and board. This only changes <b>how this device displays</b> — it does not affect other members or saved data.',
+      'tgl.hideAll': 'Hide everyone’s names',
+      'tgl.showSelf': 'But show my own name',
       'sec.admin': 'Admin',
       'lbl.adminKey': 'Admin key',
       'btn.save': 'Save',
@@ -259,6 +271,22 @@
     });
     applyLang();
 
+    // SNS共有用の表示モード（localStorage・この端末のみ・DBには保存しない）
+    const hideNamesEl = document.getElementById('hideNames');
+    const hideNamesSelfEl = document.getElementById('hideNamesSelf');
+    if (hideNamesEl && hideNamesSelfEl) {
+      hideNamesEl.checked = localStorage.getItem('hide_names') === '1';
+      hideNamesSelfEl.checked = localStorage.getItem('hide_names_self') === '1';
+      hideNamesSelfEl.disabled = !hideNamesEl.checked;
+      hideNamesEl.addEventListener('change', () => {
+        localStorage.setItem('hide_names', hideNamesEl.checked ? '1' : '0');
+        hideNamesSelfEl.disabled = !hideNamesEl.checked;
+      });
+      hideNamesSelfEl.addEventListener('change', () => {
+        localStorage.setItem('hide_names_self', hideNamesSelfEl.checked ? '1' : '0');
+      });
+    }
+
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
@@ -278,6 +306,7 @@
       }
       const data = await res.json();
       document.getElementById('settingsForm').style.display = 'block';
+      document.getElementById('snsDisplaySection').style.display = 'block';
       document.getElementById('resyncSection').style.display = 'block';
       document.getElementById('logoutSection').style.display = 'block';
       document.getElementById('nickname').value = data.nickname || '';
@@ -292,7 +321,6 @@
       document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
       document.getElementById('privacyFullMarathon').checked = data.privacy_full_marathon !== false;
       document.getElementById('privacyHalfMarathon').checked = data.privacy_half_marathon !== false;
-      document.getElementById('privacyAnonymous').checked = !!data.privacy_anonymous;
       document.getElementById('hrZ2Min').value = data.hr_z2_min ?? '';
       document.getElementById('hrZ3Min').value = data.hr_z3_min ?? '';
       document.getElementById('hrZ4Min').value = data.hr_z4_min ?? '';
@@ -318,7 +346,6 @@
         privacy_detail: document.getElementById('privacyDetail').checked,
         privacy_full_marathon: document.getElementById('privacyFullMarathon').checked,
         privacy_half_marathon: document.getElementById('privacyHalfMarathon').checked,
-        privacy_anonymous: document.getElementById('privacyAnonymous').checked,
         hr_z2_min: document.getElementById('hrZ2Min').value ? Number(document.getElementById('hrZ2Min').value) : null,
         hr_z3_min: document.getElementById('hrZ3Min').value ? Number(document.getElementById('hrZ3Min').value) : null,
         hr_z4_min: document.getElementById('hrZ4Min').value ? Number(document.getElementById('hrZ4Min').value) : null,

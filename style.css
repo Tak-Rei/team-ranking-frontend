@@ -388,6 +388,7 @@ tbody td {
 
 .toggle input:checked + .toggle-slider { background: #fc4c02; }
 .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+.toggle input:disabled + .toggle-slider { opacity: 0.4; cursor: not-allowed; }
 
 .section-title {
   color: #aaa;
