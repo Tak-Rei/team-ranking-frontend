@@ -330,13 +330,13 @@ function renderRanking() {
     const hidden = nameHidden(row.user_id);
     const nick = hidden ? '-' : (u.nickname || '未設定');
     const stravaName = (u.display_strava_name && !hidden) ? (u.strava_name || '') : '';
-    const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
-    const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '<span class="private">非公開</span>';
-    const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '<span class="private">非公開</span>';
-    const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '<span class="private">非公開</span>';
-    const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '<span class="private">非公開</span>';
-    const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '<span class="private">非公開</span>';
-    const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '<span class="private">非公開</span>';
+    const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '';
+    const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '';
+    const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '';
+    const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '';
+    const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '';
+    const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '';
+    const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '';
 
     return `<tr>
       <td class="rank ${rankClass}">${rank}</td>
@@ -388,7 +388,7 @@ function renderDetailSummary(user, stats, hidden) {
       ${g('自転車', (cur.ride_distance_km || 0).toFixed(1) + 'km')}
       ${g('水泳', (cur.swim_distance_m || 0) + 'm')}
       ${g('獲得標高', (cur.elevation_gain_m || 0) + 'm')}
-      ${user.privacy_heartrate !== false ? g('心拍負荷', cur.relative_effort || 0) : g('心拍負荷', '非公開')}
+      ${user.privacy_heartrate !== false ? g('心拍負荷', cur.relative_effort || 0) : g('心拍負荷', '-')}
       ${g('フルベスト', user.full_marathon_best || '-')}
       ${g('ハーフベスト', user.half_marathon_best || '-')}
     </div>
