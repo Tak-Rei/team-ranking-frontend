@@ -434,6 +434,18 @@ tbody td {
 }
 .logout-btn:hover { border-color: #f57d7d; color: #f57d7d; }
 
+.withdraw-btn {
+  background: none;
+  border: 1px solid #6a2d2d;
+  color: #f57d7d;
+  padding: 9px 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.withdraw-btn:hover { background: #3a1a1a; border-color: #f57d7d; }
+.withdraw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .alert {
   padding: 10px 14px;
   border-radius: 4px;
