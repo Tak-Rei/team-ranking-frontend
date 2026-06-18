@@ -597,10 +597,10 @@ tbody td {
   .month-nav { order: 2; }
   .month-nav button { padding: 3px 6px; }
   #currentMonth { font-size: 0.78rem; min-width: auto; }
-  #langToggle { padding: 3px 8px; min-width: 46px; font-size: 0.72rem; }
-  .hdr-break { display: block; flex-basis: 100%; width: 100%; height: 0; order: 3; }
-  .team-filter { order: 4; flex: 1 1 0; min-width: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; gap: 4px; }
-  header #settingsBtn { order: 5; margin-left: 6px; margin-right: 0; flex-shrink: 0; }
+  #langToggle { padding: 3px 7px; min-width: 42px; font-size: 0.72rem; }
+  .hdr-break { display: block; flex-basis: 100%; width: 100%; height: 0; order: 4; }
+  .team-filter { order: 5; flex: 1 1 0; min-width: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; gap: 4px; }
+  header #settingsBtn { order: 3; padding: 2px; font-size: 1rem; margin-left: 2px; margin-right: 0; flex-shrink: 0; }
   .filter-btn { flex-shrink: 0; font-size: 0.62rem; padding: 3px 7px; white-space: nowrap; }
   table { font-size: 11px; }
   thead th, tbody td { padding: 7px 3px; }
