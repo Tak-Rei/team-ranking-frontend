@@ -60,7 +60,7 @@ const I18N = {
   ja: {
     'toggle': 'EN',
     'h1': '🏃 メンバー別走行距離',
-    'pw.title': 'メンバー別走行距離',
+    'pw.title': 'Liberty Team Ranking',
     'pw.prompt': '参加するには合言葉を入力してください',
     'pw.ph': '合言葉',
     'pw.enter': '入る',
@@ -89,7 +89,7 @@ const I18N = {
   en: {
     'toggle': '日本語',
     'h1': '🏃 Member Distance Ranking',
-    'pw.title': 'Member Distance Ranking',
+    'pw.title': 'Liberty Team Ranking',
     'pw.prompt': 'Enter the passcode to continue',
     'pw.ph': 'Passcode',
     'pw.enter': 'Enter',

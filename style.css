@@ -23,6 +23,17 @@ header h1 {
   white-space: nowrap;
 }
 
+header h1.site-logo {
+  margin: 0;
+  line-height: 0;
+}
+
+header h1.site-logo img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
 .header-controls {
   display: flex;
   align-items: center;
@@ -578,6 +589,7 @@ tbody td {
 @media (max-width: 600px) {
   header { flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 8px 10px; }
   header h1 { font-size: 0.9rem; white-space: nowrap; order: 1; }
+  header h1.site-logo img { height: 40px; }
   .header-controls { display: contents; }
   .month-nav { order: 2; }
   .month-nav button { padding: 4px 8px; }
