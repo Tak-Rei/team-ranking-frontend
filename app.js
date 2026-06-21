@@ -81,6 +81,9 @@ const isAdmin = !!localStorage.getItem('admin_secret');
 // 掲示板データのキャッシュ（リアクションを即時反映するため）
 let boardMsgs = [];
 let boardPolls = [];
+// 返信機能: 親コメントごとの返信一覧と、開いている返信エリアのid
+let repliesByParent = {};
+const expandedReplies = new Set();
 let currentNickname = '';
 
 // SNS共有用: 名前を隠す表示モード（この端末のみ・localStorage保存・DBには保存しない）
@@ -575,16 +578,32 @@ function teamTag(team) {
   return `<span class="chat-team" style="color:${color}">${escapeHtml(team)}</span>`;
 }
 
-// コメント1件のHTML（リアクション付き）
-function renderMsgItem(m) {
+// コメント1件のHTML（リアクション付き）。isReply=true のときは返信（返信欄は出さない）
+function renderMsgItem(m, isReply) {
   const name = nameHidden(m.user_id) ? '-' : (m.users?.nickname || '名無し');
   const teamHtml = teamTag(m.users?.team || '');
   const dateStr = fmtDateTime(m.created_at);
   const delBtn = ((currentUserId && String(m.user_id) === String(currentUserId)) || isAdmin) ? `<button class="chat-del" data-id="${m.id}">削除</button>` : '';
-  return `<div class="chat-msg">
+  let replySection = '';
+  if (!isReply) {
+    const replies = repliesByParent[String(m.id)] || [];
+    const count = replies.length;
+    const open = expandedReplies.has(String(m.id));
+    const repliesHtml = replies.map(r => renderMsgItem(r, true)).join('');
+    const inputHtml = currentUserId ? `<div class="reply-input-row">
+        <input class="reply-input" data-parent="${m.id}" placeholder="返信を書く…" maxlength="300">
+        <button class="reply-send" data-parent="${m.id}">送信</button>
+      </div>` : '';
+    replySection = `<div class="reply-section">
+      <button class="reply-toggle" data-id="${m.id}">💬 ${count > 0 ? `返信 ${count}件` : '返信する'} <span class="reply-caret">${open ? '▲' : '▼'}</span></button>
+      <div class="reply-area" data-area="${m.id}" style="display:${open ? 'block' : 'none'}">${repliesHtml}${inputHtml}</div>
+    </div>`;
+  }
+  return `<div class="chat-msg${isReply ? ' chat-reply' : ''}">
     <div class="chat-msg-head"><span class="chat-left"><span class="chat-name">${escapeHtml(name)}</span>${teamHtml}</span><span class="chat-time">${dateStr}${delBtn}</span></div>
     <div class="chat-msg-body">${escapeHtml(m.message)}</div>
     ${renderReactions(m)}
+    ${replySection}
   </div>`;
 }
 
@@ -665,8 +684,13 @@ async function loadChat() {
 // キャッシュ済みのデータから掲示板を描画（リアクションの即時反映に使う）
 function renderBoard() {
   const chatMessagesEl = document.getElementById('chatMessages');
+  // 返信を親ごとにまとめる（boardMsgsにはコメントと返信が混在）
+  repliesByParent = {};
+  boardMsgs.forEach(m => {
+    if (m.parent_id) (repliesByParent[String(m.parent_id)] = repliesByParent[String(m.parent_id)] || []).push(m);
+  });
   const items = [];
-  boardMsgs.forEach(m => items.push({ t: tsMs(m.created_at), html: renderMsgItem(m) }));
+  boardMsgs.filter(m => !m.parent_id).forEach(m => items.push({ t: tsMs(m.created_at), html: renderMsgItem(m, false) }));
   boardPolls.forEach(p => items.push({ t: tsMs(p.created_at), html: renderPollItem(p) }));
   if (items.length === 0) {
     chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
@@ -749,6 +773,37 @@ function attachBoardHandlers(root) {
     opt.addEventListener('touchstart', () => { longPressed = false; pressTimer = setTimeout(() => { longPressed = true; reveal(); }, 500); }, { passive: true });
     opt.addEventListener('touchend', () => { if (pressTimer) clearTimeout(pressTimer); });
     opt.addEventListener('touchmove', () => { if (pressTimer) clearTimeout(pressTimer); });
+  });
+  // 返信エリアの開閉
+  root.querySelectorAll('.reply-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = String(btn.dataset.id);
+      const area = root.querySelector(`.reply-area[data-area="${id}"]`);
+      if (!area) return;
+      const open = area.style.display === 'none';
+      area.style.display = open ? 'block' : 'none';
+      if (open) expandedReplies.add(id); else expandedReplies.delete(id);
+      const caret = btn.querySelector('.reply-caret');
+      if (caret) caret.textContent = open ? '▲' : '▼';
+    });
+  });
+  // 返信の送信（Enterでも送信）
+  const sendReply = (parentId) => {
+    if (!currentUserId) return;
+    const input = root.querySelector(`.reply-input[data-parent="${parentId}"]`);
+    const text = input ? input.value.trim() : '';
+    if (!text) return;
+    expandedReplies.add(String(parentId)); // 投稿後も開いたままにする
+    fetch(`${API_BASE}/api/chat`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUserId, year_month: currentYearMonth, message: text, parent_id: parentId })
+    }).then(res => { if (res.ok) { if (input) input.value = ''; loadChat(); } }).catch(() => {});
+  };
+  root.querySelectorAll('.reply-send').forEach(btn => {
+    btn.addEventListener('click', () => sendReply(String(btn.dataset.parent)));
+  });
+  root.querySelectorAll('.reply-input').forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') sendReply(String(inp.dataset.parent)); });
   });
 }
 

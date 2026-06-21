@@ -491,6 +491,17 @@ tbody td {
   border-radius: 6px;
   padding: 8px 12px;
 }
+/* 返信（YouTube風スレッド・1階層） */
+.reply-section { margin-top: 6px; }
+.reply-toggle { background: none; border: none; color: #8ab4f8; font-size: 0.8rem; cursor: pointer; padding: 2px 0; }
+.reply-toggle:hover { text-decoration: underline; }
+.reply-caret { font-size: 0.7rem; }
+.reply-area { margin: 6px 0 0 12px; border-left: 2px solid #2a2a2a; padding-left: 10px; }
+.chat-msg.chat-reply { background: #141414; margin-bottom: 6px; padding: 7px 10px; }
+.reply-input-row { display: flex; gap: 6px; margin-top: 6px; }
+.reply-input { flex: 1; min-width: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #eee; padding: 6px 8px; font-size: 0.85rem; }
+.reply-send { background: #fc4c02; border: none; color: #fff; border-radius: 6px; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+
 .chat-msg-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
 .chat-left { display: inline-flex; align-items: baseline; min-width: 0; }
 .chat-name { font-weight: 600; color: #fc4c02; font-size: 0.85rem; }
