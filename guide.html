@@ -30,7 +30,7 @@
 
     <h3 data-i18n="s1.title">獲得標高</h3>
     <div class="box">
-      <p data-i18n="s1.p">獲得標高(m)は、その月に登った高さの合計です。<b>ランニングだけでなく、自転車・水泳なども含めた全種目を合算</b>しています。坂や山を多く走った人ほど大きくなります。</p>
+      <p data-i18n="s1.p">獲得標高(m)は、その月に登った高さの合計です。<b>ランニング・トレイルランニング・登山・自転車などを合算</b>しています。坂や山を多く走った人ほど大きくなります。</p>
     </div>
 
     <h3 data-i18n="s2.title">心拍負荷</h3>
@@ -51,7 +51,7 @@
     <h3 data-i18n="s4.title">推定坂道ダッシュ回数</h3>
     <div class="box">
       <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配4%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。</p>
-      <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。トレッドミル（平坦）は坂道ダッシュにはなりません。</p>
+      <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。なお、トレッドミルは傾斜をつけてダッシュすることもできますが、それをStrava側で坂として判定することができないため、トレッドミルで坂道ダッシュを行っても坂道ダッシュとしては認定されません。</p>
     </div>
 
     <h3 data-i18n="s5.title">推定値について</h3>
@@ -70,7 +70,7 @@
         'updated': 'Last updated: June 2026',
         'intro': 'This page explains what each ranking column means and how it is calculated. (Self-explanatory items such as cycling/swimming distance are omitted.)',
         's1.title': 'Elevation gain',
-        's1.p': 'Elevation gain (m) is the total height climbed during the month. It is the <b>combined total of all sports — not just running, but also cycling, swimming, etc.</b> The more hills or mountains you run, the higher it gets.',
+        's1.p': 'Elevation gain (m) is the total height climbed during the month. It is the <b>combined total of running, trail running, hiking, cycling, and so on.</b> The more hills or mountains you run, the higher it gets.',
         's2.title': 'Heart-rate load',
         's2.p': 'Heart-rate load scores <b>how long you spent in each heart-rate zone</b> during exercise. Time in each zone is multiplied by a weight (Zone 1 = 1, Zone 2 = 2 … Zone 5 = 5) and summed. <b>The longer you spend in harder zones, the higher it gets.</b> All sports (run, bike, swim) are combined.',
         's2.zone': 'Each member can enter their own heart-rate zone boundaries in Settings (to match their watch, e.g. Garmin). If not set, Strava’s zones are used.',
@@ -80,7 +80,7 @@
         's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. It is only an estimate and may differ from your actual count.',
         's4.title': 'Estimated hill-dash count',
         's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 4% grade or more</b>, repeated with short rests, is counted.',
-        's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. A treadmill (flat) does not count as a hill dash.',
+        's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. Note: you can set an incline on a treadmill and run hard, but Strava cannot detect that as a hill, so hill dashes done on a treadmill will not be recognized as hill dashes.',
         's5.title': 'About the estimates',
         's5.p': 'Wind-sprint and hill-dash counts are <span class="good">estimated automatically</span> from GPS and sensor data. Because the data has some noise, they may not exactly match your real count. Activities with no speed data (e.g. runs entered manually as distance and time only) cannot be analyzed.',
         's5.privacy': 'You can also set these estimated counts to <b>private</b> with a switch in Settings.'
