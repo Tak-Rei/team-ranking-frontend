@@ -123,6 +123,8 @@ const I18N = {
     'col.swim': '水泳(m)',
     'col.elev': '獲得標高(m)',
     'col.load': '心拍負荷',
+    'col.ws': '推定WS',
+    'col.hill': '推定坂道',
     'col.full': 'フルマラソンベスト',
     'col.half': 'ハーフマラソンベスト',
     'col.race': '参加予定レース',
@@ -153,6 +155,8 @@ const I18N = {
     'col.swim': 'Swim (m)',
     'col.elev': 'Elevation (m)',
     'col.load': 'HR load',
+    'col.ws': 'Est. WS',
+    'col.hill': 'Est. hills',
     'col.full': 'Full PB',
     'col.half': 'Half PB',
     'col.race': 'Upcoming races',
@@ -361,7 +365,7 @@ function renderRanking() {
 
   const tbody = document.getElementById('rankingBody');
   if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="13" class="loading">データなし</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="15" class="loading">データなし</td></tr>';
     return;
   }
 
@@ -379,6 +383,8 @@ function renderRanking() {
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '';
     const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '';
     const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '';
+    const wsCount = u.privacy_drills !== false ? (row.ws_count ?? 0) : '';
+    const hillCount = u.privacy_drills !== false ? (row.hill_dash_count ?? 0) : '';
     const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '';
     const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '';
 
@@ -392,6 +398,8 @@ function renderRanking() {
       <td class="num">${swimM}</td>
       <td class="num">${elev}</td>
       <td class="num">${re}</td>
+      <td class="num">${wsCount}</td>
+      <td class="num">${hillCount}</td>
       <td class="tc">${fullMara}</td>
       <td class="tc">${halfMara}</td>
       <td>${u.race || ''}</td>
@@ -433,6 +441,8 @@ function renderDetailSummary(user, stats, hidden) {
       ${g('水泳', (cur.swim_distance_m || 0) + 'm')}
       ${g('獲得標高', (cur.elevation_gain_m || 0) + 'm')}
       ${user.privacy_heartrate !== false ? g('心拍負荷', cur.relative_effort || 0) : g('心拍負荷', '-')}
+      ${user.privacy_drills !== false ? g('推定WS', cur.ws_count ?? 0) : ''}
+      ${user.privacy_drills !== false ? g('推定坂道', cur.hill_dash_count ?? 0) : ''}
       ${g('フルベスト', user.full_marathon_best || '-')}
       ${g('ハーフベスト', user.half_marathon_best || '-')}
     </div>

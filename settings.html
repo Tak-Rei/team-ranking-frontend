@@ -132,6 +132,14 @@
         </label>
       </div>
 
+      <div class="toggle-row">
+        <span class="toggle-label" data-i18n="tgl.drills">推定WS・坂道ダッシュ回数を公開する</span>
+        <label class="toggle">
+          <input type="checkbox" id="privacyDrills" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
       <p class="section-title" data-i18n="sec.admin">管理者用</p>
       <div class="form-group">
         <label data-i18n="lbl.adminKey">管理者キー</label>
@@ -245,6 +253,7 @@
       'tgl.detail': 'Show detail page',
       'tgl.full': 'Show full marathon PB',
       'tgl.half': 'Show half marathon PB',
+      'tgl.drills': 'Show estimated wind-sprint / hill-dash counts',
       'sec.sns': 'Display for sharing (this device only)',
       'sns.note': 'When posting to social media, you can hide <b>everyone’s names</b> in the ranking and board. This only changes <b>how this device displays</b> — it does not affect other members or saved data.',
       'tgl.hideAll': 'Hide everyone’s names',
@@ -361,6 +370,7 @@
       document.getElementById('privacyDetail').checked = data.privacy_detail !== false;
       document.getElementById('privacyFullMarathon').checked = data.privacy_full_marathon !== false;
       document.getElementById('privacyHalfMarathon').checked = data.privacy_half_marathon !== false;
+      document.getElementById('privacyDrills').checked = data.privacy_drills !== false;
       document.getElementById('hrZ2Min').value = data.hr_z2_min ?? '';
       document.getElementById('hrZ3Min').value = data.hr_z3_min ?? '';
       document.getElementById('hrZ4Min').value = data.hr_z4_min ?? '';
@@ -386,6 +396,7 @@
         privacy_detail: document.getElementById('privacyDetail').checked,
         privacy_full_marathon: document.getElementById('privacyFullMarathon').checked,
         privacy_half_marathon: document.getElementById('privacyHalfMarathon').checked,
+        privacy_drills: document.getElementById('privacyDrills').checked,
         hr_z2_min: document.getElementById('hrZ2Min').value ? Number(document.getElementById('hrZ2Min').value) : null,
         hr_z3_min: document.getElementById('hrZ3Min').value ? Number(document.getElementById('hrZ3Min').value) : null,
         hr_z4_min: document.getElementById('hrZ4Min').value ? Number(document.getElementById('hrZ4Min').value) : null,
