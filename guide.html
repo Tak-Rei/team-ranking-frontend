@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>各項目の見方・計算方法 - Liberty Team Ranking</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .guide-page { max-width: 640px; margin: 32px auto; padding: 0 18px 80px; line-height: 1.7; }
+    .guide-page h2 { color: #fc4c02; margin-bottom: 8px; }
+    .guide-page h3 { color: #e0e0e0; margin: 26px 0 8px; font-size: 1.05rem; border-left: 3px solid #fc4c02; padding-left: 10px; }
+    .guide-page p, .guide-page li { color: #cfcfcf; font-size: 0.92rem; }
+    .guide-page ul { margin: 6px 0 6px 20px; }
+    .guide-page li { margin: 4px 0; }
+    .guide-page .good { color: #7df5a0; font-weight: 600; }
+    .guide-page .note { color: #9aa; font-size: 0.85rem; }
+    .guide-page .box { background: #161616; border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; margin: 12px 0; }
+    .guide-page .warn { background: #2a2113; border: 1px solid #6a5320; border-radius: 8px; padding: 14px 16px; margin: 12px 0; color: #f5d98a; }
+    .guide-page a { color: #fc4c02; }
+    .guide-page .updated { color: #777; font-size: 0.8rem; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <button id="langToggle" class="lang-toggle">EN</button>
+  <div class="guide-page">
+    <button class="back-btn" onclick="history.back()" data-i18n="back">← 戻る</button>
+    <h2 data-i18n="title">各項目の見方・計算方法</h2>
+    <p class="updated" data-i18n="updated">最終更新: 2026年6月</p>
+    <p data-i18n="intro">このページでは、ランキング各項目の意味と計算方法を説明します。（自転車・水泳の距離など分かりやすいものは省略しています。）</p>
+
+    <h3 data-i18n="s1.title">獲得標高</h3>
+    <div class="box">
+      <p data-i18n="s1.p">獲得標高(m)は、その月に登った高さの合計です。<b>ランニングだけでなく、自転車・水泳なども含めた全種目を合算</b>しています。坂や山を多く走った人ほど大きくなります。</p>
+    </div>
+
+    <h3 data-i18n="s2.title">心拍負荷</h3>
+    <div class="box">
+      <p data-i18n="s2.p">心拍負荷は、運動中に<b>心拍ゾーンのどこにどれだけ滞在したか</b>をスコア化したものです。各ゾーンの滞在時間に重み（ゾーン1=1、ゾーン2=2 … ゾーン5=5）を掛けて合計します。<b>きついゾーンに長くいるほど高く</b>なります。全種目（ラン・自転車・水泳）を合算します。</p>
+      <p data-i18n="s2.zone">心拍ゾーンの境界は、設定画面で各自が入力できます（ガーミン等の時計の設定に合わせられます）。未設定の場合はStravaのゾーンを使います。</p>
+    </div>
+    <div class="warn">
+      <p data-i18n="s2.warn"><b>⚠️ 公平性についての注意：</b>心拍負荷は各自のゾーン設定に依存します。ガーミンとStravaではゾーンの計算が少し異なるため、<b>ゾーンを設定しているか・していないかで数値に差が出ます</b>。そのためメンバー間で完全に公平な比較にはなりません。あくまで<b>各自の運動強度の目安</b>としてご覧ください。</p>
+    </div>
+
+    <h3 data-i18n="s3.title">推定ウィンドスプリント回数</h3>
+    <div class="box">
+      <p data-i18n="s3.p">短い距離を速く走る「流し」の推定本数です。走行中のスピード（ならした値）を見て、<b>その日のいつものペースよりはっきり速い区間（おおよそそのランの中央値の約1.5倍以上）が8〜45秒続いたら1本</b>と判定します。短い休憩（約3分以内）を挟んで<b>3本以上繰り返した</b>場合に、その本数を数えます。平坦な区間での加速をウィンドスプリントとします。</p>
+      <p class="note" data-i18n="s3.note">※ 絶対的なスピードではなく「あなた自身のいつものペース」を基準にするので、走力に関係なく判定できます。あくまで推定なので、実際の本数とずれることがあります。</p>
+    </div>
+
+    <h3 data-i18n="s4.title">推定坂道ダッシュ回数</h3>
+    <div class="box">
+      <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配4%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。</p>
+      <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。トレッドミル（平坦）は坂道ダッシュにはなりません。</p>
+    </div>
+
+    <h3 data-i18n="s5.title">推定値について</h3>
+    <div class="box">
+      <p data-i18n="s5.p">ウィンドスプリント・坂道ダッシュの回数は、GPSやセンサーのデータから<span class="good">自動で割り出した推定値</span>です。データには多少の誤差があるため、実際の本数と完全には一致しないことがあります。速度データの無いアクティビティ（距離と時間だけ手入力したものなど）は解析できません。</p>
+      <p data-i18n="s5.privacy">これらの推定回数は、設定画面のスイッチで<b>非公開</b>にもできます。</p>
+    </div>
+  </div>
+
+  <script>
+    const PI18N = {
+      ja: {},
+      en: {
+        'back': '← Back',
+        'title': 'How each metric is calculated',
+        'updated': 'Last updated: June 2026',
+        'intro': 'This page explains what each ranking column means and how it is calculated. (Self-explanatory items such as cycling/swimming distance are omitted.)',
+        's1.title': 'Elevation gain',
+        's1.p': 'Elevation gain (m) is the total height climbed during the month. It is the <b>combined total of all sports — not just running, but also cycling, swimming, etc.</b> The more hills or mountains you run, the higher it gets.',
+        's2.title': 'Heart-rate load',
+        's2.p': 'Heart-rate load scores <b>how long you spent in each heart-rate zone</b> during exercise. Time in each zone is multiplied by a weight (Zone 1 = 1, Zone 2 = 2 … Zone 5 = 5) and summed. <b>The longer you spend in harder zones, the higher it gets.</b> All sports (run, bike, swim) are combined.',
+        's2.zone': 'Each member can enter their own heart-rate zone boundaries in Settings (to match their watch, e.g. Garmin). If not set, Strava’s zones are used.',
+        's2.warn': '<b>⚠️ A note on fairness:</b> Heart-rate load depends on each person’s zone settings. Garmin and Strava compute zones slightly differently, so <b>the value differs depending on whether and how someone has set their zones</b>. It is therefore not a perfectly fair comparison between members — please treat it as a <b>rough indicator of your own effort</b>.',
+        's3.title': 'Estimated wind-sprint count',
+        's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Looking at your (smoothed) speed during a run, <b>a burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 8–45 seconds counts as one rep</b>. If 3 or more such reps are repeated with short rests (within ~3 minutes), they are counted. Bursts on flat ground count as wind sprints.',
+        's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. It is only an estimate and may differ from your actual count.',
+        's4.title': 'Estimated hill-dash count',
+        's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 4% grade or more</b>, repeated with short rests, is counted.',
+        's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. A treadmill (flat) does not count as a hill dash.',
+        's5.title': 'About the estimates',
+        's5.p': 'Wind-sprint and hill-dash counts are <span class="good">estimated automatically</span> from GPS and sensor data. Because the data has some noise, they may not exactly match your real count. Activities with no speed data (e.g. runs entered manually as distance and time only) cannot be analyzed.',
+        's5.privacy': 'You can also set these estimated counts to <b>private</b> with a switch in Settings.'
+      }
+    };
+    let lang = localStorage.getItem('lang') || 'ja';
+    const jaDefault = {};
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (lang === 'ja') {
+          if (jaDefault[key] != null) el.innerHTML = jaDefault[key];
+        } else if (PI18N.en[key] != null) {
+          el.innerHTML = PI18N.en[key];
+        }
+      });
+      document.getElementById('langToggle').textContent = lang === 'ja' ? 'EN' : '日本語';
+    }
+    document.querySelectorAll('[data-i18n]').forEach(el => { jaDefault[el.dataset.i18n] = el.innerHTML; });
+    document.getElementById('langToggle').addEventListener('click', () => {
+      lang = lang === 'ja' ? 'en' : 'ja';
+      localStorage.setItem('lang', lang);
+      applyLang();
+    });
+    applyLang();
+  </script>
+</body>
+</html>

@@ -123,7 +123,8 @@ const I18N = {
     'col.full': 'フルマラソンベスト',
     'col.half': 'ハーフマラソンベスト',
     'col.race': '参加予定レース',
-    'col.comment': 'コメント'
+    'col.comment': 'コメント',
+    'guide.link': '📊 各項目の意味・計算方法はこちら →'
   },
   en: {
     'toggle': '日本語',
@@ -152,7 +153,8 @@ const I18N = {
     'col.full': 'Full PB',
     'col.half': 'Half PB',
     'col.race': 'Upcoming races',
-    'col.comment': 'Comment'
+    'col.comment': 'Comment',
+    'guide.link': '📊 How each metric is calculated →'
   }
 };
 function t(key) {
