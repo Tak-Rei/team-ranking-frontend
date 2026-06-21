@@ -2,6 +2,42 @@ const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3000'
   : 'https://team-ranking-backend.onrender.com';
 
+// ===== アクセストークン認証 =====
+// すべての API 呼び出し（API_BASE宛）に合言葉トークンを自動付与し、サーバーが
+// 401 を返したら合言葉の再入力を促す。各 fetch を個別に書き換えず window.fetch を
+// 1か所でラップして全呼び出しに一括適用する。トークンが無い場合はヘッダーを付けない
+// ＝旧バックエンド（トークン不要）でもそのまま動く（後方互換）。
+const _origFetch = window.fetch.bind(window);
+window.fetch = function (url, opts) {
+  const u = typeof url === 'string' ? url : (url && url.url) || '';
+  if (typeof u === 'string' && u.indexOf(API_BASE) === 0) {
+    const tok = localStorage.getItem('access_token');
+    opts = Object.assign({}, opts);
+    if (tok) opts.headers = Object.assign({}, opts.headers, { 'X-Access-Token': tok });
+    return _origFetch(url, opts).then(res => {
+      if (res.status === 401) handleAuthExpired();
+      return res;
+    });
+  }
+  return _origFetch(url, opts);
+};
+function handleAuthExpired() {
+  if (window.__authExpired) return; // 多重発火防止（複数のAPIが同時に401になっても1回だけ）
+  window.__authExpired = true;
+  localStorage.removeItem('access_granted');
+  localStorage.removeItem('access_token');
+  const gate = document.getElementById('passwordGate');
+  if (gate) gate.style.display = 'flex';
+  const input = document.getElementById('passwordInput');
+  if (input && input.parentNode && !document.getElementById('reauthNote')) {
+    const note = document.createElement('p');
+    note.id = 'reauthNote';
+    note.textContent = 'セキュリティ更新のため、お手数ですがもう一度合言葉を入力してください。';
+    note.style.cssText = 'color:#f0a000;font-size:0.8rem;margin:8px 0 0;line-height:1.5';
+    input.parentNode.insertBefore(note, input);
+  }
+}
+
 let currentUserId = localStorage.getItem('userId');
 let currentYearMonth = new Date().toISOString().slice(0, 7);
 let allData = [];
@@ -22,8 +58,11 @@ if (!localStorage.getItem('access_granted')) {
         });
         const data = await res.json();
         if (data.success) {
+          if (data.token) localStorage.setItem('access_token', data.token);
           localStorage.setItem('access_granted', '1');
           document.getElementById('passwordGate').style.display = 'none';
+          // 401をきっかけに再入力した場合は、トークン付きで読み込み直すためリロード
+          if (window.__authExpired) { window.location.reload(); return; }
         } else {
           document.getElementById('passwordError').style.display = 'block';
         }
