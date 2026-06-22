@@ -706,7 +706,7 @@ function renderBoard() {
     chatMessagesEl.innerHTML = '<p class="chat-empty">まだコメントはありません</p>';
     return;
   }
-  items.sort((a, b) => a.t - b.t);
+  items.sort((a, b) => b.t - a.t); // 新しいものを上に（新着が一番上に追加される）
   chatMessagesEl.innerHTML = items.map(it => it.html).join('');
   attachBoardHandlers(chatMessagesEl);
 }

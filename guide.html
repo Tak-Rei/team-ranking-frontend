@@ -50,7 +50,7 @@
 
     <h3 data-i18n="s4.title">推定坂道ダッシュ回数</h3>
     <div class="box">
-      <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配4%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。</p>
+      <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配3%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。</p>
       <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。なお、トレッドミルは傾斜をつけてダッシュすることもできますが、それをStrava側で坂として判定することができないため、トレッドミルで坂道ダッシュを行っても坂道ダッシュとしては認定されません。</p>
     </div>
 
@@ -79,7 +79,7 @@
         's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Looking at your (smoothed) speed during a run, <b>a burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 8–45 seconds counts as one rep</b>. If 3 or more such reps are repeated with short rests (within ~3 minutes), they are counted. Bursts on flat ground count as wind sprints.',
         's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. It is only an estimate and may differ from your actual count.',
         's4.title': 'Estimated hill-dash count',
-        's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 4% grade or more</b>, repeated with short rests, is counted.',
+        's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 3% grade or more</b>, repeated with short rests, is counted.',
         's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. Note: you can set an incline on a treadmill and run hard, but Strava cannot detect that as a hill, so hill dashes done on a treadmill will not be recognized as hill dashes.',
         's5.title': 'About the estimates',
         's5.p': 'Wind-sprint and hill-dash counts are <span class="good">estimated automatically</span> from GPS and sensor data. Because the data has some noise, they may not exactly match your real count. Activities with no speed data (e.g. runs entered manually as distance and time only) cannot be analyzed.',
