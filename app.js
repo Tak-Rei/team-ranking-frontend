@@ -488,8 +488,8 @@ const TEAM_COLORS = {
   'リバティースタッフ': '#d4f57d'
 };
 
-// 掲示板のリアクション絵文字（👍確認/いいね 👏すごい 🔥熱い ❤️感動）
-const REACTION_EMOJIS = ['👍', '👏', '🔥', '❤️'];
+// 掲示板のリアクション絵文字（👍いいね 👎よくない 👏すごい 🔥熱い ❤️感動）
+const REACTION_EMOJIS = ['👍', '👎', '👏', '🔥', '❤️'];
 
 function showDetailChart(stats, type) {
   const container = document.getElementById('detailChart');
