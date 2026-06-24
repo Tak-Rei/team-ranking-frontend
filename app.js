@@ -383,8 +383,8 @@ function renderRanking() {
     const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '';
     const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '';
     const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '';
-    const wsCount = u.privacy_drills !== false ? (row.ws_count ?? 0) : '';
-    const hillCount = u.privacy_drills !== false ? (row.hill_dash_count ?? 0) : '';
+    const wsCount = u.privacy_drills !== false ? drillText(row.ws_count, row.ws_count_latest) : '';
+    const hillCount = u.privacy_drills !== false ? drillText(row.hill_dash_count, row.hill_dash_count_latest) : '';
     const fullMara = u.privacy_full_marathon !== false ? (u.full_marathon_best || '') : '';
     const halfMara = u.privacy_half_marathon !== false ? (u.half_marathon_best || '') : '';
 
@@ -441,8 +441,8 @@ function renderDetailSummary(user, stats, hidden) {
       ${g('水泳', (cur.swim_distance_m || 0) + 'm')}
       ${g('獲得標高', (cur.elevation_gain_m || 0) + 'm')}
       ${user.privacy_heartrate !== false ? g('心拍負荷', cur.relative_effort || 0) : g('心拍負荷', '-')}
-      ${user.privacy_drills !== false ? g('推定WS', cur.ws_count ?? 0) : ''}
-      ${user.privacy_drills !== false ? g('推定坂道', cur.hill_dash_count ?? 0) : ''}
+      ${user.privacy_drills !== false ? g('推定WS', drillText(cur.ws_count, cur.ws_count_latest)) : ''}
+      ${user.privacy_drills !== false ? g('推定坂道', drillText(cur.hill_dash_count, cur.hill_dash_count_latest)) : ''}
       ${g('フルベスト', user.full_marathon_best || '-')}
       ${g('ハーフベスト', user.half_marathon_best || '-')}
     </div>
@@ -490,6 +490,13 @@ const TEAM_COLORS = {
 
 // 掲示板のリアクション絵文字（👍いいね 👎よくない 👏すごい 🔥熱い ❤️感動）
 const REACTION_EMOJIS = ['👍', '👎', '👏', '🔥', '❤️'];
+
+// 推定本数の表示。合計の横に「最新ランで記録された本数」を括弧で出す（例: 6 (3)）。
+// 最新が無い（その月にまだその種目をやっていない）なら合計だけ。
+function drillText(total, latest) {
+  const t = total ?? 0;
+  return (latest != null && latest > 0) ? `${t} <span class="drill-latest">(${latest})</span>` : `${t}`;
+}
 
 function showDetailChart(stats, type) {
   const container = document.getElementById('detailChart');
