@@ -44,7 +44,7 @@
 
     <h3 data-i18n="s3.title">推定ウィンドスプリント回数</h3>
     <div class="box">
-      <p data-i18n="s3.p">短い距離を速く走る「流し」の推定本数です。走行中のスピード（ならした値）を見て、<b>その日のいつものペースよりはっきり速い区間（おおよそそのランの中央値の約1.5倍以上）が8〜45秒続いたら1本</b>と判定します。短い休憩（約3分以内）を挟んで<b>3本以上繰り返した</b>場合に、その本数を数えます。平坦な区間での加速をウィンドスプリントとします。</p>
+      <p data-i18n="s3.p">短い距離を速く走る「流し」の推定本数です。走行中のスピード（ならした値）を見て、<b>その日のいつものペースよりはっきり速い区間（おおよそそのランの中央値の約1.5倍以上）が8〜45秒続いたら1本</b>と判定します。短い休憩（約3分以内）を挟んで<b>3本以上繰り返した</b>場合に、その本数を数えます。ほぼ平坦（勾配−3%〜3%）な区間での加速をウィンドスプリントとします。<b>急な下り坂で速くなった区間は、流しではないので数えません。</b></p>
       <p class="note" data-i18n="s3.note">※ 絶対的なスピードではなく「あなた自身のいつものペース」を基準にするので、走力に関係なく判定できます。あくまで推定なので、実際の本数とずれることがあります。</p>
     </div>
 
@@ -81,7 +81,7 @@
         's2.zone': 'Each member can enter their own heart-rate zone boundaries in Settings (to match their watch, e.g. Garmin). If not set, Strava’s zones are used.',
         's2.warn': '<b>⚠️ A note on fairness:</b> Heart-rate load depends on each person’s zone settings. Garmin and Strava compute zones slightly differently, so <b>the value differs depending on whether and how someone has set their zones</b>. It is therefore not a perfectly fair comparison between members — please treat it as a <b>rough indicator of your own effort</b>.',
         's3.title': 'Estimated wind-sprint count',
-        's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Looking at your (smoothed) speed during a run, <b>a burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 8–45 seconds counts as one rep</b>. If 3 or more such reps are repeated with short rests (within ~3 minutes), they are counted. Bursts on flat ground count as wind sprints.',
+        's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Looking at your (smoothed) speed during a run, <b>a burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 8–45 seconds counts as one rep</b>. If 3 or more such reps are repeated with short rests (within ~3 minutes), they are counted. Bursts on roughly flat ground (grade −3% to 3%) count as wind sprints. <b>Fast sections on steep downhills are not counted, since they are not strides.</b>',
         's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. It is only an estimate and may differ from your actual count.',
         's4.title': 'Estimated hill-dash count',
         's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 3% grade or more</b>, repeated with short rests, is counted.',
