@@ -470,7 +470,7 @@ tbody td {
 
 /* チャット（ひとこと掲示板） */
 /* 推定本数の「最新ラン本数」括弧（例: 6 (3)） */
-.drill-latest { color: #fc4c02; font-size: 0.85em; font-weight: 600; }
+.drill-latest { color: #fff; font-size: 0.85em; }
 
 .chat-section {
   max-width: 760px;
