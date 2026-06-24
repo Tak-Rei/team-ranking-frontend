@@ -54,6 +54,11 @@
       <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。なお、トレッドミルは傾斜をつけてダッシュすることもできますが、それをStrava側で坂として判定することができないため、トレッドミルで坂道ダッシュを行っても坂道ダッシュとしては認定されません。</p>
     </div>
 
+    <h3 data-i18n="s6.title">合計の横の括弧 ( ) の数字</h3>
+    <div class="box">
+      <p data-i18n="s6.p">推定ウィンドスプリント・推定坂道ダッシュの数字は「<b>今月の合計本数</b>」です。その横の括弧（例: <b>6 (3)</b>）は、<b>いちばん最近のランで記録された本数</b>を表します。たとえば今月の合計が6本で、直近の練習で3本やったなら「6 (3)」と表示されます。括弧は<b>その種目を実際にやったラン（本数が増えたとき）だけ更新</b>され、やらなかったランでは前の値が残ります。月が変わると合計と一緒にリセットされます。</p>
+    </div>
+
     <h3 data-i18n="s5.title">推定値について</h3>
     <div class="box">
       <p data-i18n="s5.p">ウィンドスプリント・坂道ダッシュの回数は、GPSやセンサーのデータから<span class="good">自動で割り出した推定値</span>です。データには多少の誤差があるため、実際の本数と完全には一致しないことがあります。速度データの無いアクティビティ（距離と時間だけ手入力したものなど）は解析できません。</p>
@@ -83,7 +88,9 @@
         's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. Note: you can set an incline on a treadmill and run hard, but Strava cannot detect that as a hill, so hill dashes done on a treadmill will not be recognized as hill dashes.',
         's5.title': 'About the estimates',
         's5.p': 'Wind-sprint and hill-dash counts are <span class="good">estimated automatically</span> from GPS and sensor data. Because the data has some noise, they may not exactly match your real count. Activities with no speed data (e.g. runs entered manually as distance and time only) cannot be analyzed.',
-        's5.privacy': 'You can also set these estimated counts to <b>private</b> with a switch in Settings.'
+        's5.privacy': 'You can also set these estimated counts to <b>private</b> with a switch in Settings.',
+        's6.title': 'The number in parentheses ( )',
+        's6.p': 'The estimated wind-sprint and hill-dash numbers are your <b>monthly total</b>. The number in parentheses next to it (e.g. <b>6 (3)</b>) is the count from your <b>most recent run</b>. For example, if your monthly total is 6 and you did 3 in your latest session, it shows "6 (3)". The parentheses update <b>only on runs where you actually did that drill (when the count increased)</b>; runs without it keep the previous value. They reset together with the total at the start of each month.'
       }
     };
     let lang = localStorage.getItem('lang') || 'ja';
