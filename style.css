@@ -628,6 +628,8 @@ tbody td {
   thead th:nth-child(15), tbody td:nth-child(15) { display: none; }
   .mobile-team { display: block; margin-top: 3px; }
   .mobile-team .team-badge { font-size: 10px; padding: 1px 5px; }
+  /* スマホでは推定WS/坂道の最新本数(括弧)を必ず2行目に。桁数で折返しがブレず、列が窮屈にならない */
+  .drill-latest { display: block; line-height: 1.15; }
 }
 
 .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 8px; margin: 12px 0; }
