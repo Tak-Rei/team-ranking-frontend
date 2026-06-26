@@ -637,7 +637,7 @@ function renderReactions(m) {
   const picker = REACTION_EMOJIS.map(emoji =>
     `<button class="react-btn" data-msg="${m.id}" data-emoji="${emoji}" title="リアクション">${emoji}</button>`
   ).join('');
-  return `<div class="reaction-bar">${existing}<button class="react-add" title="リアクションを追加">＋</button><div class="react-picker" style="display:none">${picker}</div></div>`;
+  return `<div class="reaction-bar">${existing}<button class="react-add" title="リアクションを追加">＋</button><div class="react-picker" style="display:none">${picker}</div><div class="react-names" style="display:none"></div></div>`;
 }
 
 // 投票1件のHTML
@@ -744,9 +744,20 @@ function attachBoardHandlers(root) {
       if (picker) picker.style.display = picker.style.display === 'none' ? 'flex' : 'none';
     });
   });
-  // リアクション（画面を即時更新し、サーバーへは裏で送信）
+  // リアクション（タップで付け外し・即時更新／長押し・右クリックで押した人を表示）
   root.querySelectorAll('.react-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    const isExisting = !!btn.querySelector('.react-count'); // 数付き=既に押された絵文字
+    let longPressed = false;
+    const revealNames = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const bar = btn.closest('.reaction-bar');
+      const el = bar && bar.querySelector('.react-names');
+      if (!el) return;
+      const names = btn.getAttribute('title') || '';
+      el.textContent = btn.dataset.emoji + ' を押した人: ' + (names || '-');
+      el.style.display = 'block';
+    };
+    const toggle = () => {
       if (!currentUserId) { alert('リアクションするにはStravaでログインしてください'); return; }
       const msgId = btn.dataset.msg, emoji = btn.dataset.emoji;
       const m = boardMsgs.find(x => String(x.id) === String(msgId));
@@ -761,7 +772,18 @@ function attachBoardHandlers(root) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: currentUserId, emoji })
       }).then(res => { if (!res.ok) loadChat(); }).catch(() => loadChat());
+    };
+    btn.addEventListener('click', () => {
+      if (longPressed) { longPressed = false; return; } // 長押し直後のクリックは付け外ししない
+      toggle();
     });
+    if (isExisting) { // 押した人を見られるのは「数付き」の絵文字だけ
+      btn.addEventListener('contextmenu', revealNames);
+      let pressTimer = null;
+      btn.addEventListener('touchstart', () => { longPressed = false; pressTimer = setTimeout(() => { longPressed = true; revealNames(); }, 500); }, { passive: true });
+      btn.addEventListener('touchend', () => { if (pressTimer) clearTimeout(pressTimer); });
+      btn.addEventListener('touchmove', () => { if (pressTimer) clearTimeout(pressTimer); });
+    }
   });
   // 投票（タップで投票・長押し/右クリックで投票者表示）
   root.querySelectorAll('.poll-opt').forEach(opt => {
