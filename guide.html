@@ -28,7 +28,7 @@
   <div class="guide-page">
     <button class="back-btn" onclick="history.back()" data-i18n="back">← 戻る</button>
     <h2 data-i18n="title">各項目の見方・計算方法</h2>
-    <p class="updated" data-i18n="updated">最終更新: 2026年6月</p>
+    <p class="updated" data-i18n="updated">最終更新: 2026年7月</p>
     <p data-i18n="intro">このページでは、ランキング各項目の意味と計算方法を説明します。（自転車・水泳の距離など分かりやすいものは省略しています。）</p>
 
     <h3 data-i18n="s1.title">獲得標高</h3>
@@ -47,13 +47,13 @@
 
     <h3 data-i18n="s3.title">推定ウィンドスプリント回数</h3>
     <div class="box">
-      <p data-i18n="s3.p">短い距離を速く走る「流し」の推定本数です。走行中のスピード（ならした値）を見て、<b>その日のいつものペースよりはっきり速い区間（おおよそそのランの中央値の約1.5倍以上）が8〜45秒続いたら1本</b>と判定します。短い休憩（約3分以内）を挟んで<b>3本以上繰り返した</b>場合に、その本数を数えます。ほぼ平坦（勾配−3%〜3%）な区間での加速をウィンドスプリントとします。<b>急な下り坂で速くなった区間は、流しではないので数えません。</b>また、<b>一定の速さ（おおよそ4:45/km）に達していない区間も数えません</b>（ジョギングや、信号などで止まってからの再スタートを流しと間違えないため）。</p>
-      <p class="note" data-i18n="s3.note">※ 絶対的なスピードではなく「あなた自身のいつものペース」を基準にするので、走力に関係なく判定できます。あくまで推定なので、実際の本数とずれることがあります。</p>
+      <p data-i18n="s3.p">短い距離を速く走る「流し」の推定本数です。判定は<b>2段構え</b>です。<b>①その日のいつものペースよりはっきり速い区間（おおよそそのランの中央値の約1.5倍以上）が6〜45秒続いたら1本</b>。<b>②ふだんのジョグが速い人は、流しが①のしきい値を超える時間がごく短くなりがちなので、「いつもより少し速い区間（約1.25倍以上）」の中に「本気の瞬間（約1.5倍以上）」が3秒以上あれば1本</b>と認めます（②で拾う流しは、生のスピードが4:00/kmより速いことが条件）。どちらも、短い休憩（約3分以内）を挟んで<b>3本以上繰り返した</b>場合に数えます。ほぼ平坦（勾配−3%〜3%）な区間での加速をウィンドスプリントとします。<b>急な下り坂で速くなった区間は、流しではないので数えません。</b>また、<b>一定の速さ（おおよそ4:45/km）に達していない区間も数えません</b>（ジョギングや、信号などで止まってからの再スタートを流しと間違えないため）。</p>
+      <p class="note" data-i18n="s3.note">※ 絶対的なスピードではなく「あなた自身のいつものペース」を基準にするので、走力に関係なく判定できます。1kmインターバルのように速い状態が長く続く練習は、流しとは別物として数えません。あくまで推定なので、実際の本数とずれることがあります。</p>
     </div>
 
     <h3 data-i18n="s4.title">推定坂道ダッシュ回数</h3>
     <div class="box">
-      <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配3%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。坂でも、<b>努力（勾配補正した速さ）が一定以上（おおよそ4:45/km相当）</b>でないと数えません（ゆっくりした上りジョグは除外）。</p>
+      <p data-i18n="s4.p">上り坂を繰り返し駆け上がる練習の推定本数です。坂では全力でもスピードが落ちるため、<b>「坂を考慮した努力度（勾配補正ペース）」</b>で速さを判定します。<b>勾配3%以上の上り</b>で努力度が急に上がる区間が、短い休憩を挟んで繰り返された場合にカウントします。坂でも、<b>努力（勾配補正した速さ）が一定以上（おおよそ4:45/km相当）</b>でないと数えません（ゆっくりした上りジョグは除外）。また、<b>同じランの中に本気の坂道ダッシュ練習がある場合、それより明らかに弱い登り（本気の練習のおおよそ6割未満の努力度）は数えません</b>。たとえば練習が終わったあと、帰り道の坂を少し速めに登った分などが本数に混ざらないようにするためです。</p>
       <p class="note" data-i18n="s4.note">※ 同じ坂を「上って下りて」と繰り返す練習を想定しています。離れた場所の坂を1回ずつ通過しただけではカウントされません。なお、トレッドミルは傾斜をつけてダッシュすることもできますが、それをStrava側で坂として判定することができないため、トレッドミルで坂道ダッシュを行っても坂道ダッシュとしては認定されません。</p>
     </div>
 
@@ -75,7 +75,7 @@
       en: {
         'back': '← Back',
         'title': 'How each metric is calculated',
-        'updated': 'Last updated: June 2026',
+        'updated': 'Last updated: July 2026',
         'intro': 'This page explains what each ranking column means and how it is calculated. (Self-explanatory items such as cycling/swimming distance are omitted.)',
         's1.title': 'Elevation gain',
         's1.p': 'Elevation gain (m) is the total height climbed during the month. It is the <b>combined total of running, trail running, hiking, cycling, and so on.</b> The more hills or mountains you run, the higher it gets.',
@@ -84,10 +84,10 @@
         's2.zone': 'Each member can enter their own heart-rate zone boundaries in Settings (to match their watch, e.g. Garmin). If not set, Strava’s zones are used.',
         's2.warn': '<b>⚠️ A note on fairness:</b> Heart-rate load depends on each person’s zone settings. Garmin and Strava compute zones slightly differently, so <b>the value differs depending on whether and how someone has set their zones</b>. It is therefore not a perfectly fair comparison between members — please treat it as a <b>rough indicator of your own effort</b>.',
         's3.title': 'Estimated wind-sprint count',
-        's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Looking at your (smoothed) speed during a run, <b>a burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 8–45 seconds counts as one rep</b>. If 3 or more such reps are repeated with short rests (within ~3 minutes), they are counted. Bursts on roughly flat ground (grade −3% to 3%) count as wind sprints. <b>Fast sections on steep downhills are not counted, since they are not strides.</b> Also, <b>sections that do not reach a minimum speed (about 4:45/km) are not counted</b> (so easy jogging, or restarting after a traffic-light stop, is not mistaken for a stride).',
-        's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. It is only an estimate and may differ from your actual count.',
+        's3.p': 'An estimate of how many short fast strides ("wind sprints") you did. Detection works in <b>two stages</b>. <b>(1) A burst clearly faster than your usual pace that day (about 1.5× the run’s median speed) lasting 6–45 seconds counts as one rep.</b> <b>(2) For runners whose everyday jog is fast, a stride may exceed the 1.5× threshold only very briefly — so a section "somewhat faster than usual (about 1.25×)" that contains an all-out moment (about 1.5× or more) for at least 3 seconds also counts as one rep</b> (strides picked up this way must be faster than 4:00/km in raw speed). In both cases, reps are counted only when <b>repeated 3 or more times</b> with short rests (within ~3 minutes). Bursts on roughly flat ground (grade −3% to 3%) count as wind sprints. <b>Fast sections on steep downhills are not counted, since they are not strides.</b> Also, <b>sections that do not reach a minimum speed (about 4:45/km) are not counted</b> (so easy jogging, or restarting after a traffic-light stop, is not mistaken for a stride).',
+        's3.note': '※ It uses "your own usual pace" rather than an absolute speed, so it works regardless of running level. Workouts where the fast pace lasts long, such as 1&nbsp;km intervals, are treated as a different thing and not counted as strides. It is only an estimate and may differ from your actual count.',
         's4.title': 'Estimated hill-dash count',
-        's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 3% grade or more</b>, repeated with short rests, is counted. On hills too, an effort (grade-adjusted speed) below a minimum (about 4:45/km equivalent) is not counted (slow uphill jogging is excluded).',
+        's4.p': 'An estimate of repeated hard uphill efforts. Because speed drops on hills even at full effort, we judge intensity using a <b>"grade-adjusted effort pace"</b>. A sharp rise in effort on an <b>uphill of 3% grade or more</b>, repeated with short rests, is counted. On hills too, an effort (grade-adjusted speed) below a minimum (about 4:45/km equivalent) is not counted (slow uphill jogging is excluded). In addition, <b>if a run contains an all-out hill-dash session, clearly weaker climbs in the same run (below roughly 60% of that session’s effort) are not counted</b> — for example, climbing a hill a bit briskly on the way home after the workout will not be added to your count.',
         's4.note': '※ This assumes a workout where you repeat the same hill (up, then down, then up…). Passing isolated hills once each is not counted. Note: you can set an incline on a treadmill and run hard, but Strava cannot detect that as a hill, so hill dashes done on a treadmill will not be recognized as hill dashes.',
         's5.title': 'About the estimates',
         's5.p': 'Wind-sprint and hill-dash counts are <span class="good">estimated automatically</span> from GPS and sensor data. Because the data has some noise, they may not exactly match your real count. Activities with no speed data (e.g. runs entered manually as distance and time only) cannot be analyzed.',
