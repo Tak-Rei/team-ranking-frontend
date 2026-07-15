@@ -378,9 +378,9 @@ function renderRanking() {
     const hidden = nameHidden(row.user_id);
     const nick = hidden ? '-' : (u.nickname || '未設定');
     const stravaName = (u.display_strava_name && !hidden) ? (u.strava_name || '') : '';
-    const runKm = u.privacy_distance !== false ? (row.run_distance_km ?? 0).toFixed(1) : '';
-    const rideKm = u.privacy_distance !== false ? (row.ride_distance_km ?? 0).toFixed(1) : '';
-    const swimM = u.privacy_distance !== false ? (row.swim_distance_m ?? 0) : '';
+    const runKm = u.privacy_distance !== false ? distText(row.run_distance_km, row.run_distance_latest, 1) : '';
+    const rideKm = u.privacy_distance !== false ? distText(row.ride_distance_km, row.ride_distance_latest, 1) : '';
+    const swimM = u.privacy_distance !== false ? distText(row.swim_distance_m, row.swim_distance_latest, 0) : '';
     const re = u.privacy_heartrate !== false ? (row.relative_effort ?? 0) : '';
     const elev = u.privacy_distance !== false ? (row.elevation_gain_m ?? 0) : '';
     const wsCount = u.privacy_drills !== false ? drillText(row.ws_count, row.ws_count_latest) : '';
@@ -496,6 +496,12 @@ const REACTION_EMOJIS = ['👍', '👎', '👏', '🔥', '❤️'];
 function drillText(total, latest) {
   const t = total ?? 0;
   return (latest != null && latest > 0) ? `${t} <span class="drill-latest">(${latest})</span>` : `${t}`;
+}
+// 距離の表示。合計の横に「直近ランで走った距離」を括弧で出す（例: 127.1 (9.4)）。
+// drillTextの距離版で、decimals桁の小数で丸める。直近ランが無ければ合計だけ。
+function distText(total, latest, decimals) {
+  const t = (total ?? 0).toFixed(decimals);
+  return (latest != null && latest > 0) ? `${t} <span class="drill-latest">(${latest.toFixed(decimals)})</span>` : `${t}`;
 }
 
 function showDetailChart(stats, type) {
